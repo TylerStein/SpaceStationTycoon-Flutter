@@ -1,0 +1,53 @@
+// A representation of how serialized game state might look
+{
+    "metadata": {
+        "stationName": "A Station",
+        "day": 200
+    },
+    "resources": {
+        "credits": 1000,
+        "fuel": 500,
+        "consumer_goods": [
+            { "level": 1, "count": 100 },
+            { "level": 2, "count": 50 },
+            { "level": 3, "count": 25 }
+        ],
+        "repair_parts": [
+            { "level": 1, "count": 100 },
+            { "level": 2, "count": 50 },
+            { "level": 3, "count": 25 }
+        ]
+    },
+    "structure": {
+        "interior_slots": 5,
+        "exterior_slots": 5,
+        "modules": [
+            { "template": "Dock", "visitor": "SHIP_001" }
+        ]
+    },
+    "module_template_unlocks": [
+        { "template": "DockModule", "levels": [1] },
+        { "template": "StorageModule", "levels": [1] },
+        { "template": "QuartersModule", "levels": [1] },
+        { "template": "MarketModule", "levels": [1] }
+    ],
+    "submodule_template_unlocks": [
+        { "template": "FuelingSubmodule", "levels": [1] },
+        { "template": "RepairSubmodule", "levels": [1] }
+    ],
+    "visitors": [
+        {
+            "id": "SHIP_001",
+            "name": "Enterprise Jr.",
+            "exterior_requirements": [
+                { "template": "FuelRequirement", "level": 1, "quantity": 50 }, // This ship will require 50x T1 fuel
+                { "template": "RepairRequirement", "level": 1, "quantity": 10 } // This ship will require 10x T1 repairs
+            ],
+            "interior_requirements": [
+                { "template": "QuartersRequirement", "level": 1, "quantity": 5 }, // This ship will required 5x T1 beds
+                { "template": "MarketModule", "level": 1, "quantity": 1 } // This ship crew will purchase 1x T1 goods
+            ]
+        }
+    ]
+
+}

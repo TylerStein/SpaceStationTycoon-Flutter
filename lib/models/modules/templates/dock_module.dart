@@ -22,39 +22,42 @@ class DockModuleTemplate extends ModuleTemplate {
   DockModuleState createDefaultState() => DockModuleState(this);
 }
 
-class DockModuleState extends ModuleState<DockModuleTemplate> {
+class DockModuleState extends ModuleState<DockModuleTemplate> implements SingleVisitorModuleState {
   VisitorID visitorID;
   List<SubmoduleState> _submodules;
 
   bool get isOccupied => visitorID != null;
-  bool get isNotOccupied => !isOccupied;
 
   DockModuleState(DockModuleTemplate template): super(template) {
     _submodules = new List<SubmoduleState>();
   }
 
   @override
-  void addSubmodule<K extends SubmoduleTemplate<DockModuleTemplate>>(SubmoduleState<K> submodule) {
+  void addSubmodule<T extends SubmoduleTemplate<DockModuleTemplate>>(SubmoduleState<T, DockModuleTemplate> submodule) {
     _submodules.add(submodule);
   }
 
   @override
-  List<SubmoduleState<K>> getSubmodules<K extends SubmoduleTemplate<DockModuleTemplate>>() {
+  List<SubmoduleState<T, DockModuleTemplate>> getSubmodules<T extends SubmoduleTemplate<DockModuleTemplate>>() {
     return _submodules.toList();
   }
 
   void updateModule(GameLoopLogic game) {
+    // Apply module running costs
+    game.resourcesProvider.addFuel(-1);
+
     _submodules.forEach((element) {
-      element.updateSubmodule(game);
+      element.updateSubmodule(game, this);
     });
   }
 
-  bool removeVisitor(VisitorID visitorID) {
-    if (this.visitorID == visitorID) {
-      this.visitorID = null;
-      return true;
-    } else {
-      return false;
-    }
+  @override
+  void removeVisitor() {
+    visitorID = null;
+  }
+
+  @override
+  void setVisitor(Visitor visitor) {
+    visitorID = visitor.id;
   }
 }

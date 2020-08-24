@@ -4,8 +4,9 @@ import 'package:space_station_tycoon/models/modules/module_factory.dart';
 import 'package:space_station_tycoon/models/modules/templates/dock_module.dart';
 import 'package:space_station_tycoon/models/modules/templates/fueling_module.dart';
 import 'package:space_station_tycoon/models/modules/templates/storage_module.dart';
+import 'package:space_station_tycoon/widgets/providers/notifier.dart';
 
-class UnlocksProvider extends ChangeNotifier {
+class UnlocksProvider extends GameStateNotifier {
   List<ModuleTemplate> templateUnlocks;
   List<SubmoduleTemplate> submoduleUnlocks;
 

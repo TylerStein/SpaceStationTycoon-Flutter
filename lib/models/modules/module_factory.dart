@@ -15,7 +15,7 @@ class ModuleFactory {
   static List<SubmoduleTemplate> get submoduleTemplates => _submoduleTemplates.values.toList();
 
   static ModuleState<T> createDefaultModuleTemplateState<T extends ModuleTemplate>({
-    List<SubmoduleState<SubmoduleTemplate<T>>> submoduleStates
+    List<SubmoduleState<SubmoduleTemplate<T>, T>> submoduleStates
   }) {
     assert(_moduleTemplates.containsKey(T), 'Module of Type $T is missing from ModuleTemplates!');
     ModuleState<T> state = _moduleTemplates[T].createDefaultState();
@@ -27,7 +27,7 @@ class ModuleFactory {
     return state;
   }
 
-  static SubmoduleState<T> createDefaultSubmoduleTemplateState<T extends SubmoduleTemplate>() {
+  static SubmoduleState<T, K> createDefaultSubmoduleTemplateState<T extends SubmoduleTemplate<K>, K extends ModuleTemplate>() {
     assert(_submoduleTemplates.containsKey(T), 'Module of Type $T is missing from ModuleTemplates!');
     return _submoduleTemplates[T].createDefaultState();
   }

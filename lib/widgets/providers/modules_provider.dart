@@ -2,8 +2,9 @@ import 'package:flutter/widgets.dart';
 import 'package:space_station_tycoon/models/modules/module.dart';
 import 'package:space_station_tycoon/models/modules/module_factory.dart';
 import 'package:space_station_tycoon/models/provider_models/modules_model.dart';
+import 'package:space_station_tycoon/widgets/providers/notifier.dart';
 
-class ModulesProvider extends ChangeNotifier {
+class ModulesProvider extends GameStateNotifier {
   ModulesModel data;
 
   ModulesProvider({
@@ -41,9 +42,9 @@ class ModulesProvider extends ChangeNotifier {
     }
   }
 
-  void addModule(ModuleTemplate moduleTemplate) {
+  void addModule(ModuleTemplate moduleTemplate, [bool notify = true]) {
     data.addModuleState(moduleTemplate.createDefaultState());
-    notifyListeners();
+    notifyOrMarkDirty(notify);
   }
 
   factory ModulesProvider.createDefault(BuildContext context) =>

@@ -1,5 +1,6 @@
 import 'package:space_station_tycoon/game_loop.dart';
 import 'package:space_station_tycoon/models/modules/module.dart';
+import 'package:space_station_tycoon/models/modules/templates.dart';
 import 'package:space_station_tycoon/models/provider_models/visitor_model.dart';
 
 class StorageModuleTemplate extends ModuleTemplate {
@@ -30,18 +31,18 @@ class StorageModuleState extends ModuleState<StorageModuleTemplate> {
   }
 
   @override
-  void addSubmodule<K extends SubmoduleTemplate<StorageModuleTemplate>>(SubmoduleState<K> submodule) {
+  void addSubmodule<T extends SubmoduleTemplate<StorageModuleTemplate>>(SubmoduleState<T, StorageModuleTemplate> submodule) {
     _submodules.add(submodule);
   }
 
   @override
-  List<SubmoduleState<K>> getSubmodules<K extends SubmoduleTemplate<StorageModuleTemplate>>() {
+  List<SubmoduleState<T, StorageModuleTemplate>> getSubmodules<T extends SubmoduleTemplate<StorageModuleTemplate>>() {
     return _submodules.toList();
   }
 
   void updateModule(GameLoopLogic game) {
     _submodules.forEach((element) {
-      element.updateSubmodule(game);
+      element.updateSubmodule(game, this);
     });
   }
 

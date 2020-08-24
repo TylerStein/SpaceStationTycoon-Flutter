@@ -1,10 +1,15 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
+import 'package:space_station_tycoon/models/provider_models/visitor_model.dart';
+import 'package:space_station_tycoon/models/visitors/requirement_templates/ship_requirements.dart';
+import 'package:space_station_tycoon/models/visitors/ship_factory.dart';
 import 'package:space_station_tycoon/widgets/providers/metadata_provider.dart';
 import 'package:space_station_tycoon/widgets/providers/modules_provider.dart';
 import 'package:space_station_tycoon/widgets/providers/resources_provider.dart';
 import 'package:space_station_tycoon/widgets/providers/tick_provider.dart';
 import 'package:space_station_tycoon/widgets/providers/visitors_provider.dart';
+
+import 'models/needs/visitor_needs.dart';
 
 /// Works with the game providers to update them based on the automatic passing of time
 class GameLoopLogic extends StatefulWidget {
@@ -49,12 +54,21 @@ class _GameLoopLogicState extends State<GameLoopLogic> {
       updateModules(frame);
       updateVisitors(frame);
       updateWorld(frame);
-      widget.metadataProvider.setDay(frame);
+      widget.metadataProvider.setDay(frame, false);
+
+      notifyAllDirty();
     });
   }
 
   @override
   Widget build(BuildContext context) => widget.child;
+
+  void notifyAllDirty() {
+    widget.modulesProvider.notifyIfDirty();
+    widget.metadataProvider.notifyIfDirty();
+    widget.resourcesProvider.notifyIfDirty();
+    widget.visitorsProvider.notifyIfDirty();
+  }
 
   void updateModules(int frame) {
     widget.modulesProvider.interiorModules.forEach((element) {
@@ -73,6 +87,13 @@ class _GameLoopLogicState extends State<GameLoopLogic> {
   }
 
   void updateWorld(int frame) {
-
+    if (widget.visitorsProvider.allVisitors.isEmpty) {
+      Visitor visitor = Visitor(id: VisitorID.unique());
+      visitor.openNeeds.add(FuelingNeed(
+        visitor: visitor,
+        fuelTier: 1,
+        fuelCount: 10,
+      ));
+    }
   }
 }

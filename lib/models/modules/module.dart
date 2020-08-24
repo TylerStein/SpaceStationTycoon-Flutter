@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart' show immutable;
 import 'package:space_station_tycoon/game_loop.dart';
+import 'package:space_station_tycoon/models/needs/visitor_needs.dart';
 import 'package:space_station_tycoon/models/provider_models/visitor_model.dart';
 
 enum ModuleLocation {
@@ -33,14 +34,13 @@ abstract class ModuleState<T extends ModuleTemplate> {
   T template;
   ModuleState(this.template);
   Type get templateType => T.runtimeType;
-  void addSubmodule<K extends SubmoduleTemplate<T>>(SubmoduleState<K> submodule);
-  List<SubmoduleState<K>> getSubmodules<K extends SubmoduleTemplate<T>>();
+  void addSubmodule<K extends SubmoduleTemplate<T>>(SubmoduleState<K, T> submodule);
+  List<SubmoduleState<K, T>> getSubmodules<K extends SubmoduleTemplate<T>>();
   bool hasSubmoduleOfType<K extends SubmoduleTemplate>() {
     Type submoduleType = K.runtimeType;
     return getSubmodules().firstWhere((element) => element.submoduleType == submoduleType, orElse: () => null) != null;
   }
   void updateModule(GameLoopLogic game);
-  bool removeVisitor(VisitorID visitorID);
 }
 
 @immutable
@@ -53,9 +53,16 @@ abstract class SubmoduleTemplate<T extends ModuleTemplate> {
   SubmoduleState createDefaultState();
 }
 
-abstract class SubmoduleState<T extends SubmoduleTemplate> {
+abstract class SubmoduleState<T extends SubmoduleTemplate<K>, K extends ModuleTemplate> {
   T template;
   SubmoduleState(this.template);
   Type get submoduleType => T.runtimeType;
-  void updateSubmodule(GameLoopLogic game);
+  void updateSubmodule(GameLoopLogic game, ModuleState<K> parent);
+}
+
+abstract class SingleVisitorModuleState {
+  bool get isOccupied;
+  VisitorID get visitorID;
+  void setVisitor(Visitor visitor);
+  void removeVisitor();
 }

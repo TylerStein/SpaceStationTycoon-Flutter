@@ -21,11 +21,13 @@ abstract class VisitorNeed {
 class FuelingNeed extends VisitorNeed {
   int fuelCount;
   int fuelTier;
+  FuelingSubmoduleState occupiedFuelingState;
 
   FuelingNeed({
     @required Visitor visitor,
     @required this.fuelTier,
     @required this.fuelCount,
+    this.occupiedFuelingState,
   }) : super(
     priority: 999,
     visitor: visitor,
@@ -41,7 +43,7 @@ class FuelingNeed extends VisitorNeed {
             testState: (ModuleState<DockModuleTemplate> moduleState) {
       DockModuleState dockState = moduleState as DockModuleState;
       return dockState.hasSubmoduleOfType<FuelingSubmoduleTemplate>() &&
-          dockState.isNotOccupied;
+          dockState.isOccupied == false;
     });
 
     return openDocksWithFueling.isNotEmpty;
@@ -54,17 +56,19 @@ class FuelingNeed extends VisitorNeed {
             testState: (ModuleState<DockModuleTemplate> moduleState) {
       DockModuleState dockState = moduleState as DockModuleState;
       return dockState.hasSubmoduleOfType<FuelingSubmoduleTemplate>() &&
-          dockState.isNotOccupied;
+          dockState.isOccupied == false;
     });
 
-    bool removed = visitor.occupyingModule.removeVisitor(visitor.id);
-    if (!removed) return false;
+    if (visitor.occupyingModule != null && visitor.occupyingModule.isOccupied) {
+      visitor.occupyingModule.removeVisitor();
+    }
 
     for (ModuleState moduleState in openDocksWithFueling) {
       DockModuleState dock = moduleState as DockModuleState;
       if (dock.isOccupied) continue;
       dock.visitorID = visitor.id;
-      visitor.occupyingModule = moduleState;
+      visitor.occupyingModule = moduleState as SingleVisitorModuleState;
+      occupiedFuelingState = (moduleState as DockModuleState).getSubmodules().firstWhere((element) => element is FuelingSubmoduleState);
       return true;
     }
 
@@ -73,6 +77,9 @@ class FuelingNeed extends VisitorNeed {
 
   @override
   void updateNeed(GameLoopLogic game) {
-
+    if (fuelCount > 0) {
+      int providedFuel = occupiedFuelingState.requestFuel(game, fuelCount);
+      fuelCount -= providedFuel;
+    }
   }
 }

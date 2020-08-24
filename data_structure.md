@@ -93,4 +93,11 @@
             
             Need.UpdateNeed // Update the need exchange (eg. ShipVisitor.Fuel++ && StationResources.Fuel-- && StationResources.Credits++)
 
-                
+# Game Loop Optimization
+    // The game loop runs once per tick and does a handul of calculations all at once
+    // Ideally the providers should notify listeners at the end of the loop instead of using the user-driven accessors
+    // Providers can implement interfaces for this
+
+# Simplifying this Polymorphic Horror
+    // The only thing you might need objects for are the States
+    // Types don't need templates they can just be enums and use maps/factories for default stuff?

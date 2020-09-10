@@ -3,6 +3,7 @@ import 'package:space_station_tycoon/models/provider_models/metadata_model.dart'
 import 'package:space_station_tycoon/widgets/providers/notifier.dart';
 
 class MetadataProvider extends GameStateNotifier {
+  final int maxLogLength = 100;
   MetadataModel data;
   
   MetadataProvider({
@@ -16,6 +17,15 @@ class MetadataProvider extends GameStateNotifier {
 
   void setDay(int day, [bool notify = true]) {
     data.day = day;
+    notifyOrMarkDirty(notify);
+  }
+
+  void addLog(String log, [bool notify = true]) {
+    if (data.logs.length > maxLogLength) {
+      data.logs.removeLast();
+    }
+
+    data.logs.insert(0, log);
     notifyOrMarkDirty(notify);
   }
 

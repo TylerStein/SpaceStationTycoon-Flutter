@@ -12,14 +12,18 @@ class EconomyTab extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _buildCard(context, 'Credits', provider.credits, provider.creditsDifference),
-            _buildCard(context, 'Fuel', provider.fuel, provider.fuelDifference),
+            _buildCard(context, 'Credits', provider.credits, provider.creditsDifference, () {
+              provider.addCredits(100);
+            }),
+            _buildCard(context, 'Fuel', provider.fuel, provider.fuelDifference, () {
+              provider.addFuel(25);
+            }),
           ],
       ),
     );
   }
 
-  Widget _buildCard(BuildContext context, String label, num currentValue, num lastValueChange) {
+  Widget _buildCard(BuildContext context, String label, num currentValue, num lastValueChange, Function() onTap) {
     bool isPositive = lastValueChange >= 0;
     Color valueColor = Theme.of(context).colorScheme.onSurface;
     if (lastValueChange > 0) {
@@ -30,17 +34,21 @@ class EconomyTab extends StatelessWidget {
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(label),
-            Spacer(),
-            Text(currentValue.toString(), textAlign: TextAlign.right),
-            Text(' (${(isPositive ? '+' : '')}${lastValueChange.toString()})', style: Theme.of(context).textTheme.bodyText1.copyWith(color: valueColor))
-          ],
+      child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(label),
+              Spacer(),
+              Text(currentValue.toString(), textAlign: TextAlign.right),
+              Text(' (${(isPositive ? '+' : '')}${lastValueChange.toString()})', style: Theme.of(context).textTheme.bodyText1.copyWith(color: valueColor))
+            ],
+          ),
         ),
       ),
     );

@@ -16,12 +16,7 @@ class QuickBar extends StatelessWidget {
               child: Text('Day ${metadata.data.day}'),
             ),
             Text(metadata.data.name),
-            GestureDetector(
-              onTap: () {
-                resources.addCredits(100);
-              },
-              child: Text('${resources.data.credits.value.toString()}C'),
-            ),
+            Text('${resources.data.credits.value.toString()}C'),
             IconButton(
               icon: Icon(Icons.settings),
               onPressed: () {

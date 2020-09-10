@@ -30,6 +30,7 @@ class Visitor {
           occupyingModule.removeVisitor();
         }
         openNeeds.removeWhere((element) => element == activeNeed);
+        game.metadataProvider.addLog('Visitor $id has fuffilled a need: ${activeNeed.runtimeType.toString()}');
         activeNeed = null;
       } else {
         activeNeed.updateNeed(game);
@@ -43,11 +44,13 @@ class Visitor {
       if (nextNeed != null) {
         bool occupiedModule = nextNeed.tryOccupyModule(game);
         if (occupiedModule) {
+          game.metadataProvider.addLog('Visitor $id has occupied a module: ${occupyingModule.runtimeType.toString()}');
           activeNeed = nextNeed;
         }
       }
     } else {
       // Leave the station
+      game.metadataProvider.addLog('Visitor $id is leaving the station');
       game.visitorsProvider.removeVisitor(id);
     }
   }

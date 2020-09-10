@@ -93,6 +93,7 @@ class _GameLoopLogicState extends State<GameLoopLogic> {
         fuelCount: 10,
       ));
 
+      widget.metadataProvider.addLog('Visitor ${visitor.id} is arriving at the station');
       widget.visitorsProvider.addVisitor(visitor);
     }
   }

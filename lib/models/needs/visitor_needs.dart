@@ -34,7 +34,7 @@ class FuelingNeed extends VisitorNeed {
   );
 
   @override
-  bool get isFufilled => fuelCount > 0;
+  bool get isFufilled => fuelCount <= 0;
 
   @override
   bool canBeFufilled(GameLoopLogic game) {
@@ -69,6 +69,7 @@ class FuelingNeed extends VisitorNeed {
       dock.visitorID = visitor.id;
       visitor.occupyingModule = moduleState as SingleVisitorModuleState;
       occupiedFuelingState = (moduleState as DockModuleState).getSubmodules().firstWhere((element) => element is FuelingSubmoduleState);
+
       return true;
     }
 
@@ -79,6 +80,10 @@ class FuelingNeed extends VisitorNeed {
   void updateNeed(GameLoopLogic game) {
     if (fuelCount > 0) {
       int providedFuel = occupiedFuelingState.requestFuel(game, fuelCount);
+      if (providedFuel == 0) {
+        game.metadataProvider.addLog('Visitor ${visitor.id} could not get any fuel from ${occupiedFuelingState.runtimeType.toString()}');
+      }
+
       fuelCount -= providedFuel;
     }
   }

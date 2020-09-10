@@ -18,7 +18,7 @@ abstract class ShipTemplate {
 abstract class ShipState<T extends ShipTemplate> {
   T template;
   List<ShipRequirementState> requirementStates;
-  Type get parentType => T.runtimeType;
+  Type get parentType => T;
   ShipState(this.template, this.requirementStates);
 }
 

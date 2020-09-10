@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:space_station_tycoon/game_loop.dart';
 import 'package:space_station_tycoon/models/modules/module.dart';
 import 'package:space_station_tycoon/models/needs/visitor_needs.dart';
-import 'package:space_station_tycoon/widgets/providers/visitors_provider.dart';
 
 class Visitor {
   VisitorID id;
@@ -14,11 +13,14 @@ class Visitor {
 
   Visitor({
     @required this.id,
-    this.openNeeds = const [],
-    this.closedNeeds = const [],
+    this.openNeeds,
+    this.closedNeeds,
     this.activeNeed,
     this.occupyingModule,
-  });
+  }) {
+    if (openNeeds == null) openNeeds = List<VisitorNeed>();
+    if (closedNeeds == null) closedNeeds = List<VisitorNeed>();
+  }
 
   void updateVisitor(GameLoopLogic game) {
     if (activeNeed != null) {
@@ -34,8 +36,11 @@ class Visitor {
       }
     } else if (openNeeds.isNotEmpty) {
       // Find a new need
-      VisitorNeed nextNeed = openNeeds.firstWhere((element) => element.canBeFufilled(game));
-      if (activeNeed != null) {
+      VisitorNeed nextNeed = openNeeds.firstWhere((element) {
+        bool canBeFufilled = element.canBeFufilled(game);
+        return canBeFufilled;
+      }, orElse: () => null);
+      if (nextNeed != null) {
         bool occupiedModule = nextNeed.tryOccupyModule(game);
         if (occupiedModule) {
           activeNeed = nextNeed;
@@ -71,7 +76,9 @@ class VisitorID {
 class VisitorModel {
   Map<VisitorID, Visitor> _visitors;
 
-  VisitorModel();
+  VisitorModel() {
+    _visitors = new Map<VisitorID, Visitor>();
+  }
 
   void addVisitor(Visitor visitor) {
     _visitors[visitor.id] = visitor;

@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:space_station_tycoon/models/provider_models/visitor_model.dart';
-import 'package:space_station_tycoon/models/visitors/requirement_templates/ship_requirements.dart';
-import 'package:space_station_tycoon/models/visitors/ship_factory.dart';
 import 'package:space_station_tycoon/widgets/providers/metadata_provider.dart';
 import 'package:space_station_tycoon/widgets/providers/modules_provider.dart';
 import 'package:space_station_tycoon/widgets/providers/resources_provider.dart';
@@ -94,6 +92,8 @@ class _GameLoopLogicState extends State<GameLoopLogic> {
         fuelTier: 1,
         fuelCount: 10,
       ));
+
+      widget.visitorsProvider.addVisitor(visitor);
     }
   }
 }

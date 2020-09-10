@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 
 abstract class GameStateNotifier extends ChangeNotifier {
-  bool isDirty;
+  bool isDirty = false;
+
   void notifyOrMarkDirty(bool notify) {
     if (notify) {
       notifyListeners();

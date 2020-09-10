@@ -15,6 +15,9 @@ class ModulesProvider extends GameStateNotifier {
   List<ModuleState> get interiorModules => data.interiorModuleStates;
   List<ModuleState> get exteriorModules => data.exteriorModuleStates;
 
+  int get maxInteriorModules => data.maxInteriorModules;
+  int get maxExteriorModules => data.maxExteriormodules;
+
   List<ModuleState<T>> getModulesOfType<T extends ModuleTemplate>({ bool Function(ModuleState<T> state) testState }) {
     ModuleLocation location = ModuleFactory.getModuleTemplate<T>().moduleLocation;
     if (location == ModuleLocation.INTERIOR) {
@@ -27,6 +30,8 @@ class ModulesProvider extends GameStateNotifier {
           }
         }
         return false;
+      }).map((element) {
+        return element as ModuleState<T>;
       }).toList() as List<ModuleState<T>>;
     } else {
       return exteriorModules.where((ModuleState state) {
@@ -38,6 +43,8 @@ class ModulesProvider extends GameStateNotifier {
           }
         }
         return false;
+      }).map((element) {
+        return element as ModuleState<T>;
       }).toList() as List<ModuleState<T>>;
     }
   }

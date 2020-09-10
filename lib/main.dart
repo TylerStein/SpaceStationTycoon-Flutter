@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:space_station_tycoon/game_loop.dart';
 import 'package:space_station_tycoon/theme.dart';
 import 'package:space_station_tycoon/widgets/game_view.dart';
 import 'package:space_station_tycoon/widgets/handlers/building_handler.dart';
-import 'package:space_station_tycoon/widgets/handlers/progression_handler.dart';
 import 'package:space_station_tycoon/widgets/providers/metadata_provider.dart';
 import 'package:space_station_tycoon/widgets/providers/modules_provider.dart';
 import 'package:space_station_tycoon/widgets/providers/resources_provider.dart';
@@ -62,14 +62,15 @@ class Game extends StatelessWidget {
                   VisitorsProvider visitorsProvider,
                   Widget child,
                 ) => MultiProvider(
-                  child: ProgressionHandler(
+                  child: GameLoopLogic(
                     child: child,
                     tickProvider: TickProvider.of(context),
                     metadataProvider: metadataProvidr,
                     resourcesProvider: resourcesProvider,
-                    unlocksProvider: unlocksProvider,
+                    visitorsProvider: visitorsProvider,
                     modulesProvider: modulesProvider,
-                    visitorProvider: visitorsProvider,
+                    // unlocksProvider: unlocksProvider,
+                    // visitorProvider: visitorsProvider,
                   ),
                   providers: [
                     ChangeNotifierProvider(

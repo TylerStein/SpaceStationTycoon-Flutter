@@ -13,9 +13,12 @@ class DockModuleTemplate extends ModuleTemplate {
   int get baseCreditCost => 5000;
 
   @override
-  bool stationMeetsRequirements(dynamic station) {
-    // TODO: implement parentModuleMeetsRequirements
-    throw UnimplementedError();
+  int get baseModuleSlots => 3;
+
+  @override
+  bool stationMeetsRequirements(GameLoopLogic game) {
+    return (game.modulesProvider.exteriorModules.length + 1) <= game.modulesProvider.maxInteriorModules
+      && game.resourcesProvider.credits >= baseCreditCost;
   }
   
   @override
@@ -24,13 +27,16 @@ class DockModuleTemplate extends ModuleTemplate {
 
 class DockModuleState extends ModuleState<DockModuleTemplate> implements SingleVisitorModuleState {
   VisitorID visitorID;
-  List<SubmoduleState> _submodules;
+  List<SubmoduleState<SubmoduleTemplate<DockModuleTemplate>, DockModuleTemplate>> _submodules;
 
   bool get isOccupied => visitorID != null;
 
   DockModuleState(DockModuleTemplate template): super(template) {
-    _submodules = new List<SubmoduleState>();
+    _submodules = new List<SubmoduleState<SubmoduleTemplate<DockModuleTemplate>, DockModuleTemplate>>();
   }
+
+  @override
+  int get submoduleCount => _submodules.length;
 
   @override
   void addSubmodule<T extends SubmoduleTemplate<DockModuleTemplate>>(SubmoduleState<T, DockModuleTemplate> submodule) {
@@ -38,8 +44,8 @@ class DockModuleState extends ModuleState<DockModuleTemplate> implements SingleV
   }
 
   @override
-  List<SubmoduleState<T, DockModuleTemplate>> getSubmodules<T extends SubmoduleTemplate<DockModuleTemplate>>() {
-    return _submodules.toList();
+  List<SubmoduleState<K, DockModuleTemplate>> getSubmodules<K extends SubmoduleTemplate<DockModuleTemplate>>() {
+    return this._submodules;
   }
 
   void updateModule(GameLoopLogic game) {

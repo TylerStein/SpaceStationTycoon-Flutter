@@ -1,6 +1,5 @@
 import 'package:space_station_tycoon/game_loop.dart';
 import 'package:space_station_tycoon/models/modules/module.dart';
-import 'package:space_station_tycoon/models/modules/templates.dart';
 import 'package:space_station_tycoon/models/provider_models/visitor_model.dart';
 
 class StorageModuleTemplate extends ModuleTemplate {
@@ -13,9 +12,12 @@ class StorageModuleTemplate extends ModuleTemplate {
   int get baseCreditCost => 500;
 
   @override
-  bool stationMeetsRequirements(dynamic station) {
-    // TODO: implement parentModuleMeetsRequirements
-    throw UnimplementedError();
+  int get baseModuleSlots => 0;
+
+  @override
+  bool stationMeetsRequirements(GameLoopLogic game) {
+    return (game.modulesProvider.interiorModules.length + 1) <= game.modulesProvider.maxInteriorModules
+      && game.resourcesProvider.credits >= baseCreditCost;
   }
 
   @override
@@ -29,6 +31,9 @@ class StorageModuleState extends ModuleState<StorageModuleTemplate> {
   StorageModuleState(StorageModuleTemplate template) : super(template) {
     _submodules = new List<SubmoduleState>();
   }
+
+  @override
+  int get submoduleCount => _submodules.length;
 
   @override
   void addSubmodule<T extends SubmoduleTemplate<StorageModuleTemplate>>(SubmoduleState<T, StorageModuleTemplate> submodule) {

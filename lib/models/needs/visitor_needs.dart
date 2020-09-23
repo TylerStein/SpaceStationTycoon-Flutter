@@ -81,7 +81,8 @@ class FuelingNeed extends VisitorNeed {
     if (fuelCount > 0) {
       int providedFuel = occupiedFuelingState.requestFuel(game, fuelCount);
       if (providedFuel == 0) {
-        game.metadataProvider.addLog('Visitor ${visitor.id} could not get any fuel from ${occupiedFuelingState.runtimeType.toString()}');
+        visitor.updateSatisfaction(-1);
+        game.visitorsProvider.notifyOrMarkDirty(false);
       }
 
       fuelCount -= providedFuel;

@@ -66,3 +66,11 @@ abstract class SingleVisitorModuleState {
   void setVisitor(Visitor visitor);
   void removeVisitor();
 }
+
+abstract class MultiVisitorModuleState {
+  bool get hasVisitors;
+  List<VisitorID> get visitorIDs;
+  List<Visitor> get visitors;
+  void addVisitor(Visitor visitor);
+  void removeVisitor(VisitorID visitorID);
+}

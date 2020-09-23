@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
+import 'package:space_station_tycoon/models/log_model.dart';
 import 'package:space_station_tycoon/models/provider_models/visitor_model.dart';
+import 'package:space_station_tycoon/widgets/providers/asset_provider.dart';
 import 'package:space_station_tycoon/widgets/providers/metadata_provider.dart';
 import 'package:space_station_tycoon/widgets/providers/modules_provider.dart';
 import 'package:space_station_tycoon/widgets/providers/resources_provider.dart';
@@ -17,7 +19,8 @@ class GameLoopLogic extends StatefulWidget {
   final ResourcesProvider resourcesProvider;
   final TickProvider tickProvider;
   final VisitorsProvider visitorsProvider;
-
+  final AssetProvider assetProvider;
+  
   GameLoopLogic({
     Key key,
     @required this.child,
@@ -26,6 +29,7 @@ class GameLoopLogic extends StatefulWidget {
     @required this.resourcesProvider,
     @required this.tickProvider,
     @required this.visitorsProvider,
+    @required this.assetProvider,
   }) : super(key: key);
 
   @override
@@ -38,6 +42,7 @@ class _GameLoopLogicState extends State<GameLoopLogic> {
   @override
   void initState() {
     _subscription = widget.tickProvider.stream.listen((event) => onTick(event));
+    widget.assetProvider.loadData();
     super.initState();
   }
 
@@ -66,6 +71,7 @@ class _GameLoopLogicState extends State<GameLoopLogic> {
     widget.metadataProvider.notifyIfDirty();
     widget.resourcesProvider.notifyIfDirty();
     widget.visitorsProvider.notifyIfDirty();
+    widget.assetProvider.notifyIfDirty();
   }
 
   void updateModules(int frame) {
@@ -86,14 +92,17 @@ class _GameLoopLogicState extends State<GameLoopLogic> {
 
   void updateWorld(int frame) {
     if (widget.visitorsProvider.allVisitors.isEmpty) {
-      Visitor visitor = Visitor(id: VisitorID.unique());
+      VisitorID id = VisitorID.unique();
+      String name = widget.assetProvider.getRandomShipName(id.toString());
+
+      Visitor visitor = Visitor(id: id, name: name);
       visitor.openNeeds.add(FuelingNeed(
         visitor: visitor,
         fuelTier: 1,
         fuelCount: 10,
       ));
 
-      widget.metadataProvider.addLog('Visitor ${visitor.id} is arriving at the station');
+      widget.metadataProvider.addLog(LogEvent.logArrival(visitor));
       widget.visitorsProvider.addVisitor(visitor);
     }
   }

@@ -1,12 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:space_station_tycoon/models/modules/util/history_tracking_data.dart';
-import 'package:space_station_tycoon/models/modules/util/tiered_data.dart';
 
 class ResourcesModel {
   HistoryTrackingData<int> credits;
   HistoryTrackingData<int> fuel;
-  HistoryTrackingData<TieredData<int>> consumerGoods;
-  HistoryTrackingData<TieredData<int>> repairParts;
+  HistoryTrackingData<int> consumerGoods;
+  HistoryTrackingData<int> repairParts;
 
   ResourcesModel({
     @required this.credits,
@@ -34,7 +33,7 @@ class ResourcesModel {
   factory ResourcesModel.createDefault() => ResourcesModel(
     credits: HistoryTrackingData<int>(0),
     fuel: HistoryTrackingData<int>(0),
-    consumerGoods: HistoryTrackingData<TieredData<int>>(TieredData<int>()),
-    repairParts: HistoryTrackingData<TieredData<int>>(TieredData<int>()),
+    consumerGoods: HistoryTrackingData<int>(0),
+    repairParts: HistoryTrackingData<int>(0),
   );
 }

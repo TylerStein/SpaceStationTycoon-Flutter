@@ -1,3 +1,6 @@
+import 'package:space_station_tycoon/models/modules/templates/repair_module.dart';
+import 'package:space_station_tycoon/models/modules/templates/store_module.dart';
+
 import 'module.dart';
 import 'templates.dart';
 
@@ -5,10 +8,12 @@ class ModuleFactory {
   static const Map<Type, ModuleTemplate> _moduleTemplates = {
     DockModuleTemplate: const DockModuleTemplate(),
     StorageModuleTemplate: const StorageModuleTemplate(),
+    StoreModuleTemplate: const StoreModuleTemplate(),
   };
 
   static Map<Type, SubmoduleTemplate> _submoduleTemplates = {
     FuelingSubmoduleTemplate: const FuelingSubmoduleTemplate(),
+    RepairSubmoduleTemplate: const RepairSubmoduleTemplate(),
   };
 
   static List<ModuleTemplate> get moduleTemplates => _moduleTemplates.values.toList();

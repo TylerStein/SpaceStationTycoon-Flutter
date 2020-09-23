@@ -1,29 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:space_station_tycoon/widgets/providers/resources_provider.dart';
+import 'package:space_station_tycoon/widgets/tabs/economy_tab/resource_details.dart';
 
-class EconomyTab extends StatelessWidget {
+class ResourceCard extends StatelessWidget {
+  final String label;
+  final num currentValue;
+  final num lastValueChange;
+  final Function() onTap;
+  
+  ResourceCard({
+    Key key,
+    @required this.label,
+    @required this.currentValue,
+    @required this.lastValueChange,
+    this.onTap,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return Consumer<ResourcesProvider>(
-      builder: (BuildContext context, ResourcesProvider provider, Widget child) => 
-        Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _buildCard(context, 'Credits', provider.credits, provider.creditsDifference, () {
-              provider.addCredits(100);
-            }),
-            _buildCard(context, 'Fuel', provider.fuel, provider.fuelDifference, () {
-              provider.addFuel(25);
-            }),
-          ],
-      ),
-    );
-  }
-
-  Widget _buildCard(BuildContext context, String label, num currentValue, num lastValueChange, Function() onTap) {
     bool isPositive = lastValueChange >= 0;
     Color valueColor = Theme.of(context).colorScheme.onSurface;
     if (lastValueChange > 0) {
@@ -36,7 +30,7 @@ class EconomyTab extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: GestureDetector(
         behavior: HitTestBehavior.translucent,
-        onTap: onTap,
+        onTap: () => _onTap(context),
         child: Padding(
           padding: const EdgeInsets.all(12.0),
           child: Row(
@@ -51,6 +45,17 @@ class EconomyTab extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  void _onTap(BuildContext context) {
+    onTap();
+
+    PersistentBottomSheetController controller;
+    controller = Scaffold.of(context).showBottomSheet(
+      (context) => ResourceDetails(
+        label: label,
+      )
     );
   }
 }

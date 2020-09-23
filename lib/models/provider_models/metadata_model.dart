@@ -1,9 +1,10 @@
 import 'package:flutter/foundation.dart';
+import 'package:space_station_tycoon/models/log_model.dart';
 
 class MetadataModel {
   String name;
   int day;
-  List<String> logs;
+  List<LogEvent> logs;
 
   MetadataModel({
     @required this.name,
@@ -25,6 +26,6 @@ class MetadataModel {
   factory MetadataModel.createDefault() => MetadataModel(
     name: 'New Space Station',
     day: 0,
-    logs: List<String>(),
+    logs: List<LogEvent>(),
   );
 }

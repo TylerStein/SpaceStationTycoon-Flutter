@@ -5,6 +5,7 @@ import 'package:space_station_tycoon/game_loop.dart';
 import 'package:space_station_tycoon/theme.dart';
 import 'package:space_station_tycoon/widgets/game_view.dart';
 import 'package:space_station_tycoon/widgets/handlers/building_handler.dart';
+import 'package:space_station_tycoon/widgets/providers/asset_provider.dart';
 import 'package:space_station_tycoon/widgets/providers/metadata_provider.dart';
 import 'package:space_station_tycoon/widgets/providers/modules_provider.dart';
 import 'package:space_station_tycoon/widgets/providers/resources_provider.dart';
@@ -46,12 +47,13 @@ class Game extends StatelessWidget {
           ChangeNotifierProvider(create: (context) => ResourcesProvider.createDefault(context)),
           ChangeNotifierProvider(create: (context) => UnlocksProvider.createDefault(context)),
           ChangeNotifierProvider(create: (context) => VisitorsProvider.createDefault(context)),
+          ChangeNotifierProvider(create: (context) => AssetProvider.createDefault(context)),
         ],
         child: TickProvider(
           tickState: TickState(duration: Duration(seconds: 1), frame: 0),
           child: Builder(
             builder: (context) =>
-              Consumer5<MetadataProvider, ModulesProvider, ResourcesProvider, UnlocksProvider, VisitorsProvider>(
+              Consumer6<MetadataProvider, ModulesProvider, ResourcesProvider, UnlocksProvider, VisitorsProvider, AssetProvider>(
                 child: GameView(),
                 builder: (
                   BuildContext context,
@@ -60,6 +62,7 @@ class Game extends StatelessWidget {
                   ResourcesProvider resourcesProvider,
                   UnlocksProvider unlocksProvider,
                   VisitorsProvider visitorsProvider,
+                  AssetProvider assetProvider,
                   Widget child,
                 ) => MultiProvider(
                   child: GameLoopLogic(
@@ -69,6 +72,7 @@ class Game extends StatelessWidget {
                     resourcesProvider: resourcesProvider,
                     visitorsProvider: visitorsProvider,
                     modulesProvider: modulesProvider,
+                    assetProvider: assetProvider,
                     // unlocksProvider: unlocksProvider,
                     // visitorProvider: visitorsProvider,
                   ),

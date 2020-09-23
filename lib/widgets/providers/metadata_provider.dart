@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:space_station_tycoon/models/log_model.dart';
 import 'package:space_station_tycoon/models/provider_models/metadata_model.dart';
 import 'package:space_station_tycoon/widgets/providers/notifier.dart';
 
@@ -20,7 +21,7 @@ class MetadataProvider extends GameStateNotifier {
     notifyOrMarkDirty(notify);
   }
 
-  void addLog(String log, [bool notify = true]) {
+  void addLog(LogEvent log, [bool notify = true]) {
     if (data.logs.length > maxLogLength) {
       data.logs.removeLast();
     }

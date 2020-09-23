@@ -1,36 +1,59 @@
 import 'package:flutter/cupertino.dart';
 import 'package:space_station_tycoon/game_loop.dart';
+import 'package:space_station_tycoon/models/log_model.dart';
 import 'package:space_station_tycoon/models/modules/module.dart';
 import 'package:space_station_tycoon/models/needs/visitor_needs.dart';
 
 class Visitor {
   VisitorID id;
+  String name;
   SingleVisitorModuleState occupyingModule;
+
+  int satisfactionPercent;
 
   VisitorNeed activeNeed;
   List<VisitorNeed> openNeeds;
   List<VisitorNeed> closedNeeds;
 
+  String get displayName => name ?? id;
+
   Visitor({
     @required this.id,
+    @required this.name,
     this.openNeeds,
     this.closedNeeds,
     this.activeNeed,
     this.occupyingModule,
+    this.satisfactionPercent,
   }) {
     if (openNeeds == null) openNeeds = List<VisitorNeed>();
     if (closedNeeds == null) closedNeeds = List<VisitorNeed>();
+    if (satisfactionPercent == null) satisfactionPercent = 100;
+  }
+
+  void updateSatisfaction(int change) {
+    satisfactionPercent += change;
+    if (satisfactionPercent < 0) satisfactionPercent = 0;
+    else if (satisfactionPercent > 100) satisfactionPercent = 100;
   }
 
   void updateVisitor(GameLoopLogic game) {
     if (activeNeed != null) {
       // Update or remove the active need
+      if (satisfactionPercent <= 0) {
+        if (occupyingModule != null) {
+          occupyingModule.removeVisitor();
+        }
+        game.metadataProvider.addLog(LogEvent.logDissatisfied(this, 'Leaving due to disappointment'));
+        game.visitorsProvider.removeVisitor(id);
+      }
+
       if (activeNeed.isFufilled) {
         if (occupyingModule != null) {
           occupyingModule.removeVisitor();
         }
         openNeeds.removeWhere((element) => element == activeNeed);
-        game.metadataProvider.addLog('Visitor $id has fuffilled a need: ${activeNeed.runtimeType.toString()}');
+        game.metadataProvider.addLog(LogEvent.logSatisfied(this, 'Fufilled a need: ${activeNeed.runtimeType.toString()}'));
         activeNeed = null;
       } else {
         activeNeed.updateNeed(game);
@@ -44,13 +67,13 @@ class Visitor {
       if (nextNeed != null) {
         bool occupiedModule = nextNeed.tryOccupyModule(game);
         if (occupiedModule) {
-          game.metadataProvider.addLog('Visitor $id has occupied a module: ${occupyingModule.runtimeType.toString()}');
+          game.metadataProvider.addLog(LogEvent.logInfo('Visitor $displayName has occupied a module: ${occupyingModule.runtimeType.toString()}'));
           activeNeed = nextNeed;
         }
       }
     } else {
       // Leave the station
-      game.metadataProvider.addLog('Visitor $id is leaving the station');
+      game.metadataProvider.addLog(LogEvent.logDeparture(this));
       game.visitorsProvider.removeVisitor(id);
     }
   }
@@ -70,6 +93,9 @@ class VisitorID {
     identical(this, other) ||
     other is VisitorID &&
     other.id == this.id;
+
+  @override
+  String toString() => id.toString();
 
   factory VisitorID.unique() {
     return new VisitorID(VisitorID._visitorIndex++);

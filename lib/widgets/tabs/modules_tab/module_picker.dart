@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:space_station_tycoon/models/modules/module.dart';
+import 'package:space_station_tycoon/widgets/generic/module_detail.dart';
 import 'package:space_station_tycoon/widgets/providers/modules_provider.dart';
 import 'package:space_station_tycoon/widgets/providers/resources_provider.dart';
 import 'package:space_station_tycoon/widgets/providers/unlocks_provider.dart';
@@ -29,16 +30,7 @@ class ModulePicker extends StatelessWidget {
       filteredModules = unlocksProvider.templateUnlocks;
     }
 
-    return Container(
-      padding: const EdgeInsets.all(24),
-      height: 200,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.15), blurRadius: 6.0, offset: Offset(0, -6)),
-        ]
-      ),
+    return ModuleDetail(
       child: Consumer<ResourcesProvider>(
         builder: (BuildContext context, ResourcesProvider resources, Widget child) => ListView.separated(
           itemCount: filteredModules.length,

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:space_station_tycoon/widgets/tabs/economy_tab.dart';
+import 'package:space_station_tycoon/widgets/tabs/economy_tab/economy_tab.dart';
 import 'package:space_station_tycoon/widgets/tabs/log_tab.dart';
 import 'package:space_station_tycoon/widgets/tabs/modules_tab/modules_tab.dart';
-import 'package:space_station_tycoon/widgets/tabs/overview_tab.dart';
+import 'package:space_station_tycoon/widgets/tabs/quest_tab.dart';
+import 'package:space_station_tycoon/widgets/tabs/settings_tab.dart';
+import 'package:space_station_tycoon/widgets/tabs/visitors_tab/visitors_tab.dart';
 
 class GameTabs extends StatefulWidget {
 
@@ -15,7 +17,7 @@ class _GameTabsState extends State<GameTabs> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    _tabController = new TabController(length: 4, vsync: this);
+    _tabController = new TabController(length: 6, vsync: this);
     super.initState();
   }
 
@@ -35,10 +37,13 @@ class _GameTabsState extends State<GameTabs> with TickerProviderStateMixin {
             physics: AlwaysScrollableScrollPhysics(),
             controller: _tabController,
             tabs: [
-              Tab(text: 'Overview'),
-              Tab(text: 'Economy'),
-              Tab(text: 'Modules'),
-              Tab(text: 'Logs'),
+            //  Tab(icon: Icon(Icons.home)),
+              Tab(icon: Icon(Icons.trending_up)),
+              Tab(icon: Icon(Icons.view_module)),
+              Tab(icon: Icon(Icons.group)),
+              Tab(icon: Icon(Icons.book)),
+              Tab(icon: Icon(Icons.rss_feed)),
+              Tab(icon: Icon(Icons.settings)),
             ],
           ),
         ),
@@ -47,10 +52,13 @@ class _GameTabsState extends State<GameTabs> with TickerProviderStateMixin {
             physics: NeverScrollableScrollPhysics(),
             controller: _tabController,
             children: [
-              OverviewTab(),
+            //  OverviewTab(),
               EconomyTab(),
               ModulesTab(),
+              VisitorsTab(),
+              QuestTab(),
               LogTab(),
+              SettingsTab(),
             ],
           )
         ),

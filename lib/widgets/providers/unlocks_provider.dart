@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:space_station_tycoon/models/modules/module.dart';
 import 'package:space_station_tycoon/models/modules/module_factory.dart';
-import 'package:space_station_tycoon/models/modules/templates/dock_module.dart';
-import 'package:space_station_tycoon/models/modules/templates/fueling_module.dart';
-import 'package:space_station_tycoon/models/modules/templates/storage_module.dart';
+import 'package:space_station_tycoon/models/modules/templates.dart';
 import 'package:space_station_tycoon/widgets/providers/notifier.dart';
 
 class UnlocksProvider extends GameStateNotifier {
@@ -23,9 +21,11 @@ class UnlocksProvider extends GameStateNotifier {
       templateUnlocks: [
         ModuleFactory.getModuleTemplate<DockModuleTemplate>(),
         ModuleFactory.getModuleTemplate<StorageModuleTemplate>(),
+        ModuleFactory.getModuleTemplate<StoreModuleTemplate>(),
       ],
       submoduleUnlocks: [
         ModuleFactory.getSubmoduleTemplate<FuelingSubmoduleTemplate>(),
+        ModuleFactory.getSubmoduleTemplate<RepairSubmoduleTemplate>(),
       ]
     );
 }

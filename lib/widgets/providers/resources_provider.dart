@@ -15,10 +15,21 @@ class ResourcesProvider extends GameStateNotifier {
   int get credits => data.credits.value;
   int get creditsDifference => data.credits.value - data.credits.last;
 
+  int get repairParts => data.repairParts.value;
+  int get repairPartsDifference => data.repairParts.value - data.repairParts.last;
+
   void addFuel(int fuel, [bool notify = true]) {
     int value = data.fuel.value + fuel;
     if (value < 0) value = 0;
     data.fuel.value = value;
+
+    notifyOrMarkDirty(notify);
+  }
+
+  void addRepairParts(int parts, [bool notify = true]) {
+    int value = data.repairParts.value + parts;
+    if (value < 0) value = 0;
+    data.repairParts.value = value;
 
     notifyOrMarkDirty(notify);
   }

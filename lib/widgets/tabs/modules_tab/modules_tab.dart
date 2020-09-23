@@ -5,6 +5,7 @@ import 'package:space_station_tycoon/models/modules/module.dart';
 import 'package:space_station_tycoon/widgets/providers/modules_provider.dart';
 import 'package:space_station_tycoon/widgets/providers/unlocks_provider.dart';
 import 'package:space_station_tycoon/widgets/tabs/modules_tab/module_picker.dart';
+import 'package:space_station_tycoon/widgets/tabs/modules_tab/submodule_picker.dart';
 
 class ModulesTab extends StatelessWidget {
   @override
@@ -39,7 +40,17 @@ class ModulesTab extends StatelessWidget {
               context,
               module,
               (BuildContext context, ModuleState module) {
-                print('Select ModuleState ${module.runtimeType.toString()}');
+                PersistentBottomSheetController controller;
+                controller = Scaffold.of(context).showBottomSheet(
+                  (context) => SubmodulePicker(
+                    parentModuleState: module,
+                    modulesProvider: modulesProvider,
+                    unlocksProvider: unlocksProvider,
+                    onClose: () {
+                      controller.close();
+                    }
+                  ),
+                );
               }
             ),
           ),
@@ -69,7 +80,17 @@ class ModulesTab extends StatelessWidget {
               context,
               module,
               (BuildContext context, ModuleState module) {
-                print('Select ModuleState ${module.runtimeType.toString()}');
+                PersistentBottomSheetController controller;
+                controller = Scaffold.of(context).showBottomSheet(
+                  (context) => SubmodulePicker(
+                    parentModuleState: module,
+                    modulesProvider: modulesProvider,
+                    unlocksProvider: unlocksProvider,
+                    onClose: () {
+                      controller.close();
+                    }
+                  ),
+                );
               }
             ),
           ),

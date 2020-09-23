@@ -33,9 +33,15 @@ class ModuleFactory {
   }
 
   static SubmoduleState<T, K> createDefaultSubmoduleTemplateState<T extends SubmoduleTemplate<K>, K extends ModuleTemplate>() {
-    assert(_submoduleTemplates.containsKey(T), 'Module of Type $T is missing from ModuleTemplates!');
+    assert(_submoduleTemplates.containsKey(T), 'Submodule of Type $T is missing from SubmoduleTemplates!');
     return _submoduleTemplates[T].createDefaultState();
   }
+
+  static SubmoduleState<T, K> createDefaultSubmoduleTemplateStateFrom<T extends SubmoduleTemplate<K>, K extends ModuleTemplate>(SubmoduleTemplate<K> template) {
+    assert(_submoduleTemplates.containsKey(template.runtimeType), 'Submodule of Type ${template.runtimeType} is missing from SubmoduleTemplates!');
+    return _submoduleTemplates[template.runtimeType].createDefaultState();
+  }
+
 
   static T getModuleTemplate<T extends ModuleTemplate>() {
     assert(_moduleTemplates.containsKey(T), 'Module of Type $T is missing from ModuleTemplates!');

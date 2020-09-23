@@ -83,6 +83,8 @@ class FuelingNeed extends VisitorNeed {
       if (providedFuel == 0) {
         visitor.updateSatisfaction(-1);
         game.visitorsProvider.notifyOrMarkDirty(false);
+      } else {
+        game.resourcesProvider.addCredits(providedFuel);
       }
 
       fuelCount -= providedFuel;

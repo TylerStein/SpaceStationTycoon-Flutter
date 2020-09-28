@@ -1,6 +1,8 @@
-import 'package:space_station_tycoon/game_loop.dart';
+import 'package:redux/redux.dart';
 import 'package:space_station_tycoon/models/modules/module.dart';
-import 'package:space_station_tycoon/models/provider_models/visitor_model.dart';
+import 'package:space_station_tycoon/redux/actions/resource_actions.dart';
+import 'package:space_station_tycoon/redux/state/state.dart';
+import 'package:space_station_tycoon/redux/state/visitor_state.dart';
 
 class StoreModuleTemplate extends ModuleTemplate {
   const StoreModuleTemplate() : super(ModuleLocation.INTERIOR);
@@ -16,9 +18,9 @@ class StoreModuleTemplate extends ModuleTemplate {
   int get baseModuleSlots => 0;
 
   @override
-  bool stationMeetsRequirements(GameLoopLogic game) {
-    return (game.modulesProvider.interiorModules.length + 1) <= game.modulesProvider.maxInteriorModules
-      && game.resourcesProvider.credits >= baseCreditCost;
+  bool stationMeetsRequirements(Store<GameState> store) {
+    return (store.state.moduleState.interiorModules.length + 1) <= store.state.moduleState.maxInteriorModules
+      && store.state.resourceState.credits.value >= baseCreditCost;
   }
   
   @override
@@ -59,12 +61,14 @@ class StoreModuleState extends ModuleState<StoreModuleTemplate> implements Multi
     return this._submodules;
   }
 
-  void updateModule(GameLoopLogic game) {
+  void updateModule(Store<GameState> store) {
     // Apply module running costs
-    game.resourcesProvider.addFuel(-1);
+    store.dispatch(SetResourceStateAction(
+      store.state.resourceState.withAddFuel(-1),
+    ));
 
     _submodules.forEach((element) {
-      element.updateSubmodule(game, this);
+      element.updateSubmodule(store, this);
     });
   }
 

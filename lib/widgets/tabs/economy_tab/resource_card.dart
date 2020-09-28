@@ -50,9 +50,7 @@ class ResourceCard extends StatelessWidget {
 
   void _onTap(BuildContext context) {
     onTap();
-
-    PersistentBottomSheetController controller;
-    controller = Scaffold.of(context).showBottomSheet(
+    Scaffold.of(context).showBottomSheet(
       (context) => ResourceDetails(
         label: label,
       )

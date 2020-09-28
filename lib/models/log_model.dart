@@ -1,4 +1,4 @@
-import 'package:space_station_tycoon/models/provider_models/visitor_model.dart';
+import 'package:space_station_tycoon/redux/state/visitor_state.dart';
 
 enum LogEventType {
   info,

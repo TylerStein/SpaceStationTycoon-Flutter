@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
+import 'package:redux/redux.dart';
 import 'package:space_station_tycoon/models/modules/module.dart';
-import 'package:space_station_tycoon/widgets/providers/modules_provider.dart';
+import 'package:space_station_tycoon/redux/state/state.dart';
 
 @immutable
 abstract class ShipTemplate {
@@ -26,7 +27,7 @@ abstract class ShipState<T extends ShipTemplate> {
 abstract class ShipRequirementTemplate {
   const ShipRequirementTemplate();
 
-  bool modulesCanSatisfy(ModulesProvider modulesProvider);
+  bool modulesCanSatisfy(Store<GameState> store);
   ShipRequirementState createDefaultState();
 }
 

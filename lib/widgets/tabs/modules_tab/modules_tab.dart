@@ -1,31 +1,70 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:redux/redux.dart';
 import 'package:space_station_tycoon/models/modules/module.dart';
-import 'package:space_station_tycoon/widgets/providers/modules_provider.dart';
-import 'package:space_station_tycoon/widgets/providers/unlocks_provider.dart';
+import 'package:space_station_tycoon/redux/state/state.dart';
 import 'package:space_station_tycoon/widgets/tabs/modules_tab/module_picker.dart';
 import 'package:space_station_tycoon/widgets/tabs/modules_tab/submodule_picker.dart';
+
+@immutable
+class ModulesTabViewModel {
+  final BuiltList<ModuleState> interiorModules;
+  final int maxInteriorModules;
+
+  final BuiltList<ModuleState> exteriorModules;
+  final int maxExteriorModules;
+
+  ModulesTabViewModel({
+    @required this.interiorModules,
+    @required this.exteriorModules,
+    @required this.maxInteriorModules,
+    @required this.maxExteriorModules,
+  });
+
+  @override
+  int get hashCode => interiorModules.hashCode ^
+    exteriorModules.hashCode ^
+    maxInteriorModules.hashCode ^
+    maxExteriorModules.hashCode;
+
+  @override
+  operator ==(Object other) =>
+    identical(this, other) ||
+    other is ModulesTabViewModel &&
+    other.interiorModules == interiorModules &&
+    other.exteriorModules == exteriorModules &&
+    other.maxInteriorModules == maxInteriorModules &&
+    other.maxExteriorModules == maxExteriorModules;
+
+  factory ModulesTabViewModel.fromStore(Store<GameState> store) =>
+    ModulesTabViewModel(
+      interiorModules: store.state.moduleState.moduleStateTree.interiorModules,
+      exteriorModules: store.state.moduleState.moduleStateTree.exteriorModules,
+      maxInteriorModules: store.state.moduleState.maxInteriorModules,
+      maxExteriorModules: store.state.moduleState.maxExteriormodules,
+    );
+}
 
 class ModulesTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Consumer2<ModulesProvider, UnlocksProvider>(
-      builder: (BuildContext context, ModulesProvider modulesProvider, UnlocksProvider unlocksProvider, Widget child) =>
+    return StoreConnector<GameState, ModulesTabViewModel>(
+      converter: (Store<GameState> store) => ModulesTabViewModel.fromStore(store),
+      builder: (BuildContext context, ModulesTabViewModel viewModel) =>
        Column(
         children: [
           _buildAddRow(
             context,
             'Interior',
-            modulesProvider.interiorModules.length,
-            modulesProvider.data.maxInteriorModules,
+            viewModel.interiorModules.length,
+            viewModel.maxInteriorModules,
             () {
               PersistentBottomSheetController controller;
               controller = Scaffold.of(context).showBottomSheet(
                 (context) => ModulePicker(
                   locationFilter: ModuleLocation.INTERIOR,
-                  modulesProvider: modulesProvider,
-                  unlocksProvider: unlocksProvider,
                   onClose: () {
                     controller.close();
                   }
@@ -35,7 +74,7 @@ class ModulesTab extends StatelessWidget {
           ),
           _buildModuleGrid<ModuleState>(
             context,
-            modulesProvider.interiorModules,
+            viewModel.interiorModules,
             (context, module) => _buildModuleSquare(
               context,
               module,
@@ -44,8 +83,6 @@ class ModulesTab extends StatelessWidget {
                 controller = Scaffold.of(context).showBottomSheet(
                   (context) => SubmodulePicker(
                     parentModuleState: module,
-                    modulesProvider: modulesProvider,
-                    unlocksProvider: unlocksProvider,
                     onClose: () {
                       controller.close();
                     }
@@ -57,15 +94,13 @@ class ModulesTab extends StatelessWidget {
           _buildAddRow(
             context,
             'Exterior',
-            modulesProvider.exteriorModules.length,
-            modulesProvider.data.maxExteriormodules,
+            viewModel.exteriorModules.length,
+            viewModel.maxExteriorModules,
             () {
               PersistentBottomSheetController controller;
               controller = Scaffold.of(context).showBottomSheet(
                 (context) => ModulePicker(
                   locationFilter: ModuleLocation.EXTERIOR,
-                  modulesProvider: modulesProvider,
-                  unlocksProvider: unlocksProvider,
                   onClose: () {
                     controller.close();
                   }
@@ -75,7 +110,7 @@ class ModulesTab extends StatelessWidget {
           ),
           _buildModuleGrid<ModuleState>(
             context,
-            List.generate(modulesProvider.exteriorModules.length, (index) => modulesProvider.exteriorModules[index]),
+            viewModel.exteriorModules,
             (context, module) => _buildModuleSquare(
               context,
               module,
@@ -84,8 +119,6 @@ class ModulesTab extends StatelessWidget {
                 controller = Scaffold.of(context).showBottomSheet(
                   (context) => SubmodulePicker(
                     parentModuleState: module,
-                    modulesProvider: modulesProvider,
-                    unlocksProvider: unlocksProvider,
                     onClose: () {
                       controller.close();
                     }
@@ -117,7 +150,7 @@ class ModulesTab extends StatelessWidget {
     );
   }
 
-  Widget _buildModuleGrid<T>(BuildContext context, List<T> modules, Widget Function(BuildContext context, T module) builder) {
+  Widget _buildModuleGrid<T>(BuildContext context, BuiltList<T> modules, Widget Function(BuildContext context, T module) builder) {
     return Expanded(
       child: GridView.count(
         crossAxisCount: 4,

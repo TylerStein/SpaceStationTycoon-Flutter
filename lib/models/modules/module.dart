@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart' show immutable;
-import 'package:space_station_tycoon/game_loop.dart';
-import 'package:space_station_tycoon/models/provider_models/visitor_model.dart';
+import 'package:redux/redux.dart';
+import 'package:space_station_tycoon/redux/state/state.dart';
+import 'package:space_station_tycoon/redux/state/visitor_state.dart';
 
 enum ModuleLocation {
   INTERIOR,
@@ -15,7 +16,7 @@ abstract class ModuleTemplate {
 
   final ModuleLocation moduleLocation;
 
-  bool stationMeetsRequirements(GameLoopLogic game);
+  bool stationMeetsRequirements(Store<GameState> store);
   ModuleState createDefaultState();
   String get shortName;
   int get baseCreditCost;
@@ -39,7 +40,7 @@ abstract class ModuleState<T extends ModuleTemplate> {
   bool hasSubmoduleOfType<K extends SubmoduleTemplate>() {
     return getSubmodules().firstWhere((element) => element.submoduleType == K, orElse: () => null) != null;
   }
-  void updateModule(GameLoopLogic game);
+  void updateModule(Store<GameState> store);
   int get submoduleCount;
 }
 
@@ -49,7 +50,7 @@ abstract class SubmoduleTemplate<T extends ModuleTemplate> {
   Type get parentType => T;
   String get shortName;
   int get baseCreditCost;
-  bool parentModuleMeetsRequirements(GameLoopLogic game, ModuleState<T> parent);
+  bool parentModuleMeetsRequirements(Store<GameState> store, ModuleState<T> parent);
   SubmoduleState createDefaultState();
 }
 
@@ -57,7 +58,7 @@ abstract class SubmoduleState<T extends SubmoduleTemplate<K>, K extends ModuleTe
   T template;
   SubmoduleState(this.template);
   Type get submoduleType => T;
-  void updateSubmodule(GameLoopLogic game, ModuleState<K> parent);
+  void updateSubmodule(Store<GameState> store, ModuleState<K> parent);
 }
 
 abstract class SingleVisitorModuleState {

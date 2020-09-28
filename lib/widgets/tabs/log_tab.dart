@@ -1,17 +1,43 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:redux/redux.dart';
 import 'package:space_station_tycoon/models/log_model.dart';
-import 'package:space_station_tycoon/widgets/providers/metadata_provider.dart';
+import 'package:space_station_tycoon/redux/state/state.dart';
+
+@immutable
+class LogTabViewModel {
+  final BuiltList<LogEvent> logs;
+
+  LogTabViewModel({
+    @required this.logs,
+  });
+
+  @override
+  int get hashCode => logs.hashCode;
+
+  @override
+  operator ==(Object other) =>
+    identical(this, other) ||
+    other is LogTabViewModel &&
+    other.logs == logs;
+
+  factory LogTabViewModel.fromStore(Store<GameState> store) =>
+    LogTabViewModel(
+      logs: store.state.metadataState.logs,
+    );
+}
 
 class LogTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Consumer<MetadataProvider>(
-      builder: (BuildContext context, MetadataProvider provider, Widget child) =>
+    return StoreConnector<GameState, LogTabViewModel>(
+      converter: (Store<GameState> store) => LogTabViewModel.fromStore(store),
+      builder: (BuildContext context, LogTabViewModel viewModel) =>
         ListView.builder(
-          itemCount: provider.data.logs.length,
-          itemBuilder: (BuildContext context, int index) => buildRow(context, provider.data.logs[index]),
+          itemCount: viewModel.logs.length,
+          itemBuilder: (BuildContext context, int index) => buildRow(context, viewModel.logs[index]),
         ),
     );
   }

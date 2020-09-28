@@ -1,25 +1,12 @@
 import 'dart:async';
 import 'package:flutter/widgets.dart';
 
-class TickState {
+class TickStreamController {
   StreamController<int> tickStreamController;
-  Duration duration;
-  int frame;
+  final Duration duration;
 
-  @override
-  int get hashCode => duration.hashCode ^ frame.hashCode ^ tickStreamController.hashCode;
-
-  @override
-  operator ==(Object other) =>
-    identical(other, this) ||
-    other is TickState &&
-    other.tickStreamController == tickStreamController &&
-    other.duration == duration &&
-    other.frame == frame;
-
-  TickState({
+  TickStreamController({
     @required this.duration,
-    this.frame = 0,
   }) {
     this.tickStreamController = new StreamController.broadcast(onListen: () {
       print('onListen');
@@ -30,13 +17,6 @@ class TickState {
 
   void startTicker() {
     this.tickStreamController.addStream(Stream.periodic(duration, (count) => count).asBroadcastStream());
-    this.tickStreamController.stream.listen((count) {
-      onTick(count);
-    });
-  }
-
-  void onTick(int frameCount) {
-    this.frame = frameCount;
   }
 
   void onDispose() {
@@ -46,10 +26,9 @@ class TickState {
 
 @immutable
 class TickProvider extends InheritedWidget {
-  final TickState tickState;
+  final TickStreamController tickState;
   final Widget child;
 
-  int get frame => tickState.frame;
   Stream<int> get stream => tickState.tickStreamController.stream;
 
   TickProvider({

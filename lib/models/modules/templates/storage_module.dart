@@ -1,6 +1,7 @@
-import 'package:space_station_tycoon/game_loop.dart';
+import 'package:redux/redux.dart';
 import 'package:space_station_tycoon/models/modules/module.dart';
-import 'package:space_station_tycoon/models/provider_models/visitor_model.dart';
+import 'package:space_station_tycoon/redux/state/state.dart';
+import 'package:space_station_tycoon/redux/state/visitor_state.dart';
 
 class StorageModuleTemplate extends ModuleTemplate {
   const StorageModuleTemplate() : super(ModuleLocation.INTERIOR);
@@ -15,9 +16,9 @@ class StorageModuleTemplate extends ModuleTemplate {
   int get baseModuleSlots => 0;
 
   @override
-  bool stationMeetsRequirements(GameLoopLogic game) {
-    return (game.modulesProvider.interiorModules.length + 1) <= game.modulesProvider.maxInteriorModules
-      && game.resourcesProvider.credits >= baseCreditCost;
+  bool stationMeetsRequirements(Store<GameState> store) {
+    return (store.state.moduleState.interiorModules.length + 1) <= store.state.moduleState.maxInteriorModules
+      && store.state.resourceState.credits.value >= baseCreditCost;
   }
 
   @override
@@ -45,9 +46,9 @@ class StorageModuleState extends ModuleState<StorageModuleTemplate> {
     return _submodules.toList();
   }
 
-  void updateModule(GameLoopLogic game) {
+  void updateModule(Store<GameState> store) {
     _submodules.forEach((element) {
-      element.updateSubmodule(game, this);
+      element.updateSubmodule(store, this);
     });
   }
 

@@ -1,6 +1,8 @@
-import 'package:space_station_tycoon/game_loop.dart';
+import 'package:redux/redux.dart';
 import 'package:space_station_tycoon/models/modules/module.dart';
 import 'package:space_station_tycoon/models/modules/templates/dock_module.dart';
+import 'package:space_station_tycoon/redux/actions/resource_actions.dart';
+import 'package:space_station_tycoon/redux/state/state.dart';
 
 class FuelingSubmoduleTemplate extends SubmoduleTemplate<DockModuleTemplate> {
   const FuelingSubmoduleTemplate() : super();
@@ -12,9 +14,9 @@ class FuelingSubmoduleTemplate extends SubmoduleTemplate<DockModuleTemplate> {
   int get baseCreditCost => 500;
 
   @override
-  bool parentModuleMeetsRequirements(GameLoopLogic game, ModuleState<DockModuleTemplate> parent) {
+  bool parentModuleMeetsRequirements(Store<GameState> store, ModuleState<DockModuleTemplate> parent) {
     return (parent.submoduleCount + 1) <= parent.template.baseModuleSlots
-      && game.resourcesProvider.credits >= baseCreditCost;
+      && store.state.resourceState.credits.value >= baseCreditCost;
   }
 
   @override
@@ -26,13 +28,15 @@ class FuelingSubmoduleState extends SubmoduleState<FuelingSubmoduleTemplate, Doc
     FuelingSubmoduleTemplate template
   ) : super(template);
   
-  void updateSubmodule(GameLoopLogic game, ModuleState<DockModuleTemplate> parent) {
+  void updateSubmodule(Store<GameState> store, ModuleState<DockModuleTemplate> parent) {
     //
   }
 
-  int requestFuel(GameLoopLogic game, int count) {
-    int fuelBefore = game.resourcesProvider.fuel;
-    game.resourcesProvider.addFuel(-count, false);
-    return fuelBefore - game.resourcesProvider.fuel;
+  int requestFuel(Store<GameState> store, int count) {
+    int fuelBefore = store.state.resourceState.fuel.value;
+    store.dispatch(SetResourceStateAction(
+      store.state.resourceState.withAddFuel(-1 * count),
+    ));
+    return fuelBefore - store.state.resourceState.fuel.value;
   }
 }

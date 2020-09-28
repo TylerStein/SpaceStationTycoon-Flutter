@@ -1,9 +1,11 @@
 import 'package:flutter/foundation.dart';
-import 'package:space_station_tycoon/game_loop.dart';
+import 'package:redux/redux.dart';
 import 'package:space_station_tycoon/models/modules/module.dart';
 import 'package:space_station_tycoon/models/modules/templates/dock_module.dart';
 import 'package:space_station_tycoon/models/modules/templates/fueling_module.dart';
-import 'package:space_station_tycoon/models/provider_models/visitor_model.dart';
+import 'package:space_station_tycoon/redux/actions/resource_actions.dart';
+import 'package:space_station_tycoon/redux/state/state.dart';
+import 'package:space_station_tycoon/redux/state/visitor_state.dart';
 
 abstract class VisitorNeed {
   int priority = 0;
@@ -12,9 +14,9 @@ abstract class VisitorNeed {
     @required this.priority,
     @required this.visitor,
   });
-  bool canBeFufilled(GameLoopLogic game);
-  bool tryOccupyModule(GameLoopLogic game);
-  void updateNeed(GameLoopLogic game);
+  bool canBeFufilled(Store<GameState> store);
+  bool tryOccupyModule(Store<GameState> store);
+  void updateNeed(Store<GameState> store);
   bool get isFufilled;
 }
 
@@ -37,10 +39,8 @@ class FuelingNeed extends VisitorNeed {
   bool get isFufilled => fuelCount <= 0;
 
   @override
-  bool canBeFufilled(GameLoopLogic game) {
-    List<ModuleState> openDocksWithFueling = game.modulesProvider
-        .getModulesOfType<DockModuleTemplate>(
-            testState: (ModuleState<DockModuleTemplate> moduleState) {
+  bool canBeFufilled(Store<GameState> store) {
+    List<ModuleState> openDocksWithFueling = store.state.moduleState.getModulesOfType<DockModuleTemplate>(testState: (ModuleState<DockModuleTemplate> moduleState) {
       DockModuleState dockState = moduleState as DockModuleState;
       return dockState.hasSubmoduleOfType<FuelingSubmoduleTemplate>() &&
           dockState.isOccupied == false;
@@ -50,10 +50,8 @@ class FuelingNeed extends VisitorNeed {
   }
 
   @override
-  bool tryOccupyModule(GameLoopLogic game) {
-    List<ModuleState> openDocksWithFueling = game.modulesProvider
-        .getModulesOfType<DockModuleTemplate>(
-            testState: (ModuleState<DockModuleTemplate> moduleState) {
+  bool tryOccupyModule(Store<GameState> store) {
+    List<ModuleState> openDocksWithFueling = store.state.moduleState.getModulesOfType<DockModuleTemplate>(testState: (ModuleState<DockModuleTemplate> moduleState) {
       DockModuleState dockState = moduleState as DockModuleState;
       return dockState.hasSubmoduleOfType<FuelingSubmoduleTemplate>() &&
           dockState.isOccupied == false;
@@ -77,14 +75,15 @@ class FuelingNeed extends VisitorNeed {
   }
 
   @override
-  void updateNeed(GameLoopLogic game) {
+  void updateNeed(Store<GameState> store) {
     if (fuelCount > 0) {
-      int providedFuel = occupiedFuelingState.requestFuel(game, fuelCount);
+      int providedFuel = occupiedFuelingState.requestFuel(store, fuelCount);
       if (providedFuel == 0) {
         visitor.updateSatisfaction(-1);
-        game.visitorsProvider.notifyOrMarkDirty(false);
       } else {
-        game.resourcesProvider.addCredits(providedFuel);
+        store.dispatch(SetResourceStateAction(
+          store.state.resourceState.withAddCredits(providedFuel),
+        ));
       }
 
       fuelCount -= providedFuel;

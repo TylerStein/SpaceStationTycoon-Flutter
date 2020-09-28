@@ -1,16 +1,19 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_redux/flutter_redux.dart';
-import 'package:redux/redux.dart';
-import 'package:space_station_tycoon/redux/middleware/middleware.dart';
-import 'package:space_station_tycoon/redux/reducers/reducer.dart';
-import 'package:space_station_tycoon/redux/state/state.dart';
+import 'package:space_station_tycoon/frame_controller.dart';
+import 'package:space_station_tycoon/game.dart';
 import 'package:space_station_tycoon/theme.dart';
-import 'package:space_station_tycoon/widgets/game_view.dart';
 
+StreamController gameTickController;
 
 void main() {
-  runApp(App());
+  FrameController frameController = FrameController(
+    const Duration(seconds: 1),
+  );
+
+  runApp(App(frameController: frameController,));
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarColor: SpaceStationTycoonTheme.darkThemeData.appBarTheme.color,
     statusBarBrightness: Brightness.dark,
@@ -18,6 +21,12 @@ void main() {
 }
 
 class App extends StatelessWidget {
+  final FrameController frameController;
+
+  App({
+    @required this.frameController
+  });
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -26,26 +35,13 @@ class App extends StatelessWidget {
       theme: SpaceStationTycoonTheme.darkThemeData,
       darkTheme: SpaceStationTycoonTheme.darkThemeData,
       themeMode: ThemeMode.dark,
-      home: Game(),
+      home: Game(
+        frameController: frameController,
+      ),
     );
   }
 }
 
-class Game extends StatelessWidget {
-  Game({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return StoreProvider<GameState>(
-      store: Store<GameState>(
-        gameStateReducer,
-        initialState: GameState.createDefault(),
-        middleware: buildGameStateMiddleware(),
-      ),
-      child: GameView(),
-    );
     
     // return MultiProvider(
     //     providers: [
@@ -97,5 +93,3 @@ class Game extends StatelessWidget {
     //       ),
     //     ),
     // );
-  }
-}

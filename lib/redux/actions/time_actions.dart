@@ -4,3 +4,7 @@ class SetTimeStateAction {
   final TimeState state;
   SetTimeStateAction(this.state);
 }
+
+class NextFrameAction {
+  NextFrameAction();
+}

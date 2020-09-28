@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 
 @immutable
@@ -18,12 +20,10 @@ class TimeState {
     other.frame == frame;
 
   TimeState copyWith({
-    Duration duration,
     int frame,
   }) => TimeState(
     frame: frame ?? this.frame,
   );
 
-  factory TimeState.createDefault() =>
-    TimeState(frame: 0);
+  factory TimeState.createDefault() => TimeState(frame: 0);
 }

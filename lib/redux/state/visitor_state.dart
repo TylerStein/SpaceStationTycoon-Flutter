@@ -1,7 +1,9 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter/foundation.dart';
+import 'package:redux/redux.dart';
 import 'package:space_station_tycoon/models/modules/module.dart';
 import 'package:space_station_tycoon/models/needs/visitor_needs.dart';
+import 'package:space_station_tycoon/redux/state/state.dart';
 
 @immutable
 class VisitorState {
@@ -56,46 +58,46 @@ class Visitor {
     else if (satisfactionPercent > 100) satisfactionPercent = 100;
   }
 
-  // void updateVisitor(GameLoopLogic game) {
-  //   if (activeNeed != null) {
-  //     // Update or remove the active need
-  //     if (satisfactionPercent <= 0) {
-  //       if (occupyingModule != null) {
-  //         occupyingModule.removeVisitor();
-  //       }
-  //       game.metadataProvider.addLog(LogEvent.logDissatisfied(this, 'Leaving due to disappointment'));
-  //       game.visitorsProvider.removeVisitor(id);
-  //     }
+  void updateVisitor(Store<GameState> store) {
+    if (activeNeed != null) {
+      // Update or remove the active need
+      if (satisfactionPercent <= 0) {
+        if (occupyingModule != null) {
+          occupyingModule.removeVisitor();
+        }
+        game.metadataProvider.addLog(LogEvent.logDissatisfied(this, 'Leaving due to disappointment'));
+        store.state.visitorState.removeVisitor(id);
+      }
 
-  //     if (activeNeed.isFufilled) {
-  //       if (occupyingModule != null) {
-  //         occupyingModule.removeVisitor();
-  //       }
-  //       openNeeds.removeWhere((element) => element == activeNeed);
-  //       game.metadataProvider.addLog(LogEvent.logSatisfied(this, 'Fufilled a need: ${activeNeed.runtimeType.toString()}'));
-  //       activeNeed = null;
-  //     } else {
-  //       activeNeed.updateNeed(game);
-  //     }
-  //   } else if (openNeeds.isNotEmpty) {
-  //     // Find a new need
-  //     VisitorNeed nextNeed = openNeeds.firstWhere((element) {
-  //       bool canBeFufilled = element.canBeFufilled(game);
-  //       return canBeFufilled;
-  //     }, orElse: () => null);
-  //     if (nextNeed != null) {
-  //       bool occupiedModule = nextNeed.tryOccupyModule(game);
-  //       if (occupiedModule) {
-  //         game.metadataProvider.addLog(LogEvent.logInfo('Visitor $displayName has occupied a module: ${occupyingModule.runtimeType.toString()}'));
-  //         activeNeed = nextNeed;
-  //       }
-  //     }
-  //   } else {
-  //     // Leave the station
-  //     game.metadataProvider.addLog(LogEvent.logDeparture(this));
-  //     game.visitorsProvider.removeVisitor(id);
-  //   }
-  // }
+      if (activeNeed.isFufilled) {
+        if (occupyingModule != null) {
+          occupyingModule.removeVisitor();
+        }
+        openNeeds.removeWhere((element) => element == activeNeed);
+        game.metadataProvider.addLog(LogEvent.logSatisfied(this, 'Fufilled a need: ${activeNeed.runtimeType.toString()}'));
+        activeNeed = null;
+      } else {
+        activeNeed.updateNeed(game);
+      }
+    } else if (openNeeds.isNotEmpty) {
+      // Find a new need
+      VisitorNeed nextNeed = openNeeds.firstWhere((element) {
+        bool canBeFufilled = element.canBeFufilled(game);
+        return canBeFufilled;
+      }, orElse: () => null);
+      if (nextNeed != null) {
+        bool occupiedModule = nextNeed.tryOccupyModule(game);
+        if (occupiedModule) {
+          game.metadataProvider.addLog(LogEvent.logInfo('Visitor $displayName has occupied a module: ${occupyingModule.runtimeType.toString()}'));
+          activeNeed = nextNeed;
+        }
+      }
+    } else {
+      // Leave the station
+      game.metadataProvider.addLog(LogEvent.logDeparture(this));
+      game.visitorsProvider.removeVisitor(id);
+    }
+  }
 }
 
 class VisitorID {

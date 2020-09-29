@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
-import 'package:space_station_tycoon/redux/actions/resource_actions.dart';
 import 'package:space_station_tycoon/redux/state/state.dart';
 import 'package:space_station_tycoon/widgets/tabs/economy_tab/resource_card.dart';
+import 'package:space_station_tycoon/redux/actions/state_actions.dart';
 
 @immutable
 class EconomyTabViewModel {

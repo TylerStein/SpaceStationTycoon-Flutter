@@ -1,4 +1,6 @@
 
+import 'dart:math';
+
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter/foundation.dart';
 
@@ -28,4 +30,10 @@ class AssetState {
   }) => AssetState(
     shipNames: shipNames ?? this.shipNames,
   );
+
+  String getRandomShipName([String orElse]) {
+    if (shipNames == null) return orElse;
+    int index = Random().nextInt(shipNames.length);
+    return shipNames[index];
+  }
 }

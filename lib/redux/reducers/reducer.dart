@@ -1,11 +1,4 @@
-import 'package:space_station_tycoon/redux/actions/asset_actions.dart';
-import 'package:space_station_tycoon/redux/actions/metadata_actions.dart';
-import 'package:space_station_tycoon/redux/actions/module_actions.dart';
-import 'package:space_station_tycoon/redux/actions/quest_actions.dart';
-import 'package:space_station_tycoon/redux/actions/resource_actions.dart';
-import 'package:space_station_tycoon/redux/actions/time_actions.dart';
-import 'package:space_station_tycoon/redux/actions/unlock_actions.dart';
-import 'package:space_station_tycoon/redux/actions/visitor_actions.dart';
+import 'package:space_station_tycoon/redux/actions/state_actions.dart';
 import 'package:space_station_tycoon/redux/state/state.dart';
 
 GameState gameStateReducer(GameState state, dynamic action) {

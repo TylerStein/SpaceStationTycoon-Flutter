@@ -1,7 +1,7 @@
 import 'package:redux/redux.dart';
 import 'package:space_station_tycoon/models/modules/module.dart';
 import 'package:space_station_tycoon/models/modules/templates/dock_module.dart';
-import 'package:space_station_tycoon/redux/actions/resource_actions.dart';
+import 'package:space_station_tycoon/redux/actions/state_actions.dart';
 import 'package:space_station_tycoon/redux/state/state.dart';
 
 class FuelingSubmoduleTemplate extends SubmoduleTemplate<DockModuleTemplate> {

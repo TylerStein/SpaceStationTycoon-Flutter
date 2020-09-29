@@ -5,8 +5,11 @@ class FrameController {
   StreamController<dynamic> _controller;
 
   FrameController(Duration duration) {
-    _controller = new StreamController.broadcast();
-    _controller.addStream(Stream.periodic(duration));
+    _controller = new StreamController.broadcast(sync: true);
+    _controller.addStream(Stream.periodic(duration, (int value) {
+      print('tick $value');
+      return value;
+    }));
   }
 
   Stream<dynamic> get onFrame => _controller.stream;

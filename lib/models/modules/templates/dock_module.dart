@@ -2,7 +2,6 @@ import 'package:redux/redux.dart';
 import 'package:space_station_tycoon/models/modules/module.dart';
 import 'package:space_station_tycoon/redux/actions/state_actions.dart';
 import 'package:space_station_tycoon/redux/state/state.dart';
-import 'package:space_station_tycoon/redux/state/visitor_state.dart';
 
 class DockModuleTemplate extends ModuleTemplate {
   const DockModuleTemplate() : super(ModuleLocation.EXTERIOR);
@@ -27,11 +26,10 @@ class DockModuleTemplate extends ModuleTemplate {
   DockModuleState createDefaultState() => DockModuleState(this);
 }
 
-class DockModuleState extends ModuleState<DockModuleTemplate> implements SingleVisitorModuleState {
-  VisitorID visitorID;
+class DockModuleState extends ModuleState<DockModuleTemplate> {
   List<SubmoduleState<SubmoduleTemplate<DockModuleTemplate>, DockModuleTemplate>> _submodules;
 
-  bool get isOccupied => visitorID != null;
+  // bool get isOccupied => visitorID != null;
 
   DockModuleState(DockModuleTemplate template): super(template) {
     _submodules = new List<SubmoduleState<SubmoduleTemplate<DockModuleTemplate>, DockModuleTemplate>>();
@@ -61,13 +59,13 @@ class DockModuleState extends ModuleState<DockModuleTemplate> implements SingleV
     });
   }
 
-  @override
-  void removeVisitor() {
-    visitorID = null;
-  }
+  // @override
+  // void removeVisitor() {
+  //   visitorID = null;
+  // }
 
-  @override
-  void setVisitor(Visitor visitor) {
-    visitorID = visitor.id;
-  }
+  // @override
+  // void setVisitor(Visitor visitor) {
+  //   visitorID = visitor.id;
+  // }
 }

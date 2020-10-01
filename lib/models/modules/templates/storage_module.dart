@@ -1,7 +1,6 @@
 import 'package:redux/redux.dart';
 import 'package:space_station_tycoon/models/modules/module.dart';
 import 'package:space_station_tycoon/redux/state/state.dart';
-import 'package:space_station_tycoon/redux/state/visitor_state.dart';
 
 class StorageModuleTemplate extends ModuleTemplate {
   const StorageModuleTemplate() : super(ModuleLocation.INTERIOR);
@@ -52,5 +51,5 @@ class StorageModuleState extends ModuleState<StorageModuleTemplate> {
     });
   }
 
-  bool removeVisitor(VisitorID visitorId) => false;
+  // bool removeVisitor(VisitorID visitorId) => false;
 }

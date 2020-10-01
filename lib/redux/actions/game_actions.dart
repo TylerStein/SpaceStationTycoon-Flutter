@@ -1,8 +1,9 @@
 
+import 'package:space_station_tycoon/models/id.dart';
 import 'package:space_station_tycoon/models/log_model.dart';
 import 'package:space_station_tycoon/models/modules/module.dart';
+import 'package:space_station_tycoon/models/visitors/visitor.dart';
 import 'package:space_station_tycoon/redux/actions/generic_actions.dart';
-import 'package:space_station_tycoon/redux/state/visitor_state.dart';
 
 /// Runs automation logic for a module
 class RunModuleLogicAction {
@@ -24,8 +25,16 @@ class AddVisitorAction implements LoggableAction {
   AddVisitorAction(this.visitor);
 }
 
-class RemoveVisitorAction implements LoggableAction {
-  Visitor visitor;
-  LogEvent get logEvent => LogEvent.logDeparture(visitor);
-  RemoveVisitorAction(this.visitor);
+class AddVisitorModuleBindingAction {
+  ID visitorID;
+  ID moduleID;
+  AddVisitorModuleBindingAction(this.visitorID, this.moduleID);
+}
+
+class RemoveVisitorModuleBindingAction {
+  ID visitorID;
+  ID moduleID;
+  RemoveVisitorModuleBindingAction(this.visitorID, this.moduleID);
+  RemoveVisitorModuleBindingAction.forModule(ID moduleID) : visitorID = null, moduleID = moduleID;
+  RemoveVisitorModuleBindingAction.forVisitor(ID visitorID) : visitorID = visitorID, moduleID = null;
 }

@@ -1,11 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:redux/redux.dart';
+import 'package:space_station_tycoon/models/id.dart';
 import 'package:space_station_tycoon/models/modules/module.dart';
 import 'package:space_station_tycoon/models/modules/templates/dock_module.dart';
 import 'package:space_station_tycoon/models/modules/templates/fueling_module.dart';
+import 'package:space_station_tycoon/models/visitors/visitor.dart';
+import 'package:space_station_tycoon/redux/actions/game_actions.dart';
 import 'package:space_station_tycoon/redux/actions/state_actions.dart';
 import 'package:space_station_tycoon/redux/state/state.dart';
-import 'package:space_station_tycoon/redux/state/visitor_state.dart';
 
 abstract class VisitorNeed {
   int priority = 0;
@@ -42,8 +44,9 @@ class FuelingNeed extends VisitorNeed {
   bool canBeFufilled(Store<GameState> store) {
     List<ModuleState> openDocksWithFueling = store.state.moduleState.getModulesOfType<DockModuleTemplate>(testState: (ModuleState<DockModuleTemplate> moduleState) {
       DockModuleState dockState = moduleState as DockModuleState;
-      return dockState.hasSubmoduleOfType<FuelingSubmoduleTemplate>() &&
-          dockState.isOccupied == false;
+      bool hasFueling = dockState.hasSubmoduleOfType<FuelingSubmoduleTemplate>();
+      Set<ID> moduleVisitors = store.state.moduleVisitorBindingState.getModuleVisitors(moduleState.id);
+      return hasFueling && moduleVisitors.isEmpty;
     });
 
     return openDocksWithFueling.isNotEmpty;
@@ -53,21 +56,15 @@ class FuelingNeed extends VisitorNeed {
   bool tryOccupyModule(Store<GameState> store) {
     List<ModuleState> openDocksWithFueling = store.state.moduleState.getModulesOfType<DockModuleTemplate>(testState: (ModuleState<DockModuleTemplate> moduleState) {
       DockModuleState dockState = moduleState as DockModuleState;
-      return dockState.hasSubmoduleOfType<FuelingSubmoduleTemplate>() &&
-          dockState.isOccupied == false;
+      bool hasFueling = dockState.hasSubmoduleOfType<FuelingSubmoduleTemplate>();
+      Set<ID> moduleVisitors = store.state.moduleVisitorBindingState.getModuleVisitors(moduleState.id);
+      return hasFueling && moduleVisitors.isEmpty;
     });
 
-    if (visitor.occupyingModule != null && visitor.occupyingModule.isOccupied) {
-      visitor.occupyingModule.removeVisitor();
-    }
-
-    for (ModuleState moduleState in openDocksWithFueling) {
-      DockModuleState dock = moduleState as DockModuleState;
-      if (dock.isOccupied) continue;
-      dock.visitorID = visitor.id;
-      visitor.occupyingModule = moduleState as SingleVisitorModuleState;
-      occupiedFuelingState = (moduleState as DockModuleState).getSubmodules().firstWhere((element) => element is FuelingSubmoduleState);
-
+    if (openDocksWithFueling.isNotEmpty) {
+      DockModuleState dock = openDocksWithFueling.first as DockModuleState;
+      occupiedFuelingState = dock.getSubmodules().firstWhere((element) => element is FuelingSubmoduleState);
+      store.dispatch(AddVisitorModuleBindingAction(visitor.id, dock.id));
       return true;
     }
 

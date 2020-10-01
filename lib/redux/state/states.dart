@@ -8,3 +8,4 @@ export './states.dart';
 export './time_state.dart';
 export './unlock_state.dart';
 export './visitor_state.dart';
+export './module_visitor_binding_state.dart';

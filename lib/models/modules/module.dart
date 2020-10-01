@@ -1,12 +1,37 @@
 import 'package:flutter/foundation.dart' show immutable;
 import 'package:redux/redux.dart';
+import 'package:space_station_tycoon/models/id.dart';
+import 'package:space_station_tycoon/models/visitors/visitor.dart';
 import 'package:space_station_tycoon/redux/state/state.dart';
-import 'package:space_station_tycoon/redux/state/visitor_state.dart';
 
 enum ModuleLocation {
   INTERIOR,
   EXTERIOR
 }
+
+class ModuleID {
+  static int _index = 0;
+
+  int id;
+  ModuleID(this.id);
+
+  @override
+  int get hashCode => id.hashCode;
+
+  @override
+  operator ==(Object other) =>
+    identical(this, other) ||
+    other is ModuleID &&
+    other.id == this.id;
+
+  @override
+  String toString() => id.toString();
+
+  factory ModuleID.unique() {
+    return new ModuleID(ModuleID._index++);
+  }
+}
+
 
 /// Flyweight representation of the module
 /// This generic class defines all the common elements of a module
@@ -33,6 +58,7 @@ abstract class ModuleTemplate {
 /// This includes all the unique aspects of an instantiated module
 abstract class ModuleState<T extends ModuleTemplate> {
   T template;
+  ID id;
   ModuleState(this.template);
   Type get templateType => T;
   void addSubmodule<K extends SubmoduleTemplate<T>>(SubmoduleState<K, T> submodule);
@@ -62,16 +88,16 @@ abstract class SubmoduleState<T extends SubmoduleTemplate<K>, K extends ModuleTe
 }
 
 abstract class SingleVisitorModuleState {
-  bool get isOccupied;
-  VisitorID get visitorID;
+  // bool get isOccupied;
+  // ID get visitorID;
   void setVisitor(Visitor visitor);
   void removeVisitor();
 }
 
-abstract class MultiVisitorModuleState {
-  bool get hasVisitors;
-  List<VisitorID> get visitorIDs;
-  List<Visitor> get visitors;
-  void addVisitor(Visitor visitor);
-  void removeVisitor(VisitorID visitorID);
-}
+// abstract class MultiVisitorModuleState {
+//   bool get hasVisitors;
+//   List<ID> get visitorIDs;
+//   List<Visitor> get visitors;
+//   void addVisitor(Visitor visitor);
+//   void removeVisitor(ID visitorID);
+// }

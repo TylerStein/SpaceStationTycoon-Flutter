@@ -1,8 +1,10 @@
 import 'package:space_station_tycoon/redux/actions/state_actions.dart';
+import 'package:space_station_tycoon/redux/reducers/module_visitor_binding_state_reducer.dart';
 import 'package:space_station_tycoon/redux/state/state.dart';
 
 GameState gameStateReducer(GameState state, dynamic action) {
   return GameState(
+    idState: state.idState,
     assetState: (action is SetAssetStateAction) ? action.state : state.assetState,
     metadataState: (action is SetMetadataStateAction) ? action.state : state.metadataState,
     moduleState: (action is SetBuiltModulesStateAction) ? action.state : state.moduleState,
@@ -11,5 +13,6 @@ GameState gameStateReducer(GameState state, dynamic action) {
     timeState: (action is SetTimeStateAction) ? action.state : state.timeState,
     unlockState: (action is SetUnlockStateActions) ? action.state : state.unlockState,
     visitorState: (action is SetVisitorStateAction) ? action.state : state.visitorState,
+    moduleVisitorBindingState: moduleVisitorBindingStateReducer(state.moduleVisitorBindingState, action),
   );
 }

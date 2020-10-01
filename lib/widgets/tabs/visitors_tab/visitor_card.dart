@@ -1,14 +1,18 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:space_station_tycoon/redux/state/visitor_state.dart';
+import 'package:space_station_tycoon/models/modules/module.dart';
+import 'package:space_station_tycoon/models/visitors/visitor.dart';
 import 'package:space_station_tycoon/widgets/tabs/visitors_tab/visitor_details.dart';
 
 class VisitorCard extends StatelessWidget {
   final Visitor visitor;
+  final BuiltList<ModuleState> modules;
 
   VisitorCard({
     Key key,
     @required this.visitor,
+    @required this.modules,
   }) : super(key: key);
 
   @override
@@ -41,6 +45,7 @@ class VisitorCard extends StatelessWidget {
     Scaffold.of(context).showBottomSheet(
       (context) => VisitorDetails(
         visitor: visitor,
+        modules: modules,
       )
     );
   }

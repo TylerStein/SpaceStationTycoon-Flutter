@@ -1,12 +1,16 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
-import 'package:space_station_tycoon/redux/state/visitor_state.dart';
+import 'package:space_station_tycoon/models/modules/module.dart';
+import 'package:space_station_tycoon/models/visitors/visitor.dart';
 
 class VisitorDetails extends StatelessWidget {
   final Visitor visitor;
+  final BuiltList<ModuleState> modules;
 
   VisitorDetails({
     Key key,
     @required this.visitor,
+    @required this.modules,
   }) : super(key: key);
 
   @override
@@ -20,7 +24,7 @@ class VisitorDetails extends StatelessWidget {
           child: Text(visitor.displayName.toString(), textAlign: TextAlign.left),
         ),
         Text('Occupying Module:'),
-        Text(visitor.occupyingModule?.toString() ?? 'No occupied module'),
+        Text(modules?.toString() ?? 'No occupied module'),
         Text('Active Need:'),
         Text(visitor.activeNeed?.toString() ?? 'No active need'),
       ],

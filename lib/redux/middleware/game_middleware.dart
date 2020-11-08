@@ -18,6 +18,8 @@ class TimeMiddleware {
           store.state.metadataState.withAddedLog(action.logEvent),
         )
       );
+
+      next(action);
     };
   }
 
@@ -31,6 +33,16 @@ class TimeMiddleware {
           )
         )
       );
+
+      if (store.state.assetState.isLoaded == false) {
+        // wait for asset state to load before updating
+        return;
+      }
+
+      updateModules(store, newFrameValue);
+      updateVisitors(store, newFrameValue);
+      updateWorld(store, newFrameValue);
+      updateMetadata(store, newFrameValue);
     };
   }
 

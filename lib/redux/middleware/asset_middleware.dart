@@ -19,10 +19,10 @@ class AssetMiddleware {
         LineSplitter lineSplitter = LineSplitter();
         List<String> shipNames = lineSplitter.convert(loadedShipNames);
         BuiltList<String> shipNamesBuilt = BuiltList<String>.of(shipNames);
-        store.dispatch(SetAssetStateAction(AssetState(shipNames: shipNamesBuilt)));
+        store.dispatch(SetAssetStateAction(AssetState(shipNames: shipNamesBuilt, isLoaded: true)));
       } catch (error) {
         print(error);
-        store.dispatch(SetAssetStateAction(AssetState(shipNames: BuiltList())));
+        store.dispatch(SetAssetStateAction(AssetState(shipNames: BuiltList(), isLoaded: true)));
       }
     };
   }

@@ -20,3 +20,10 @@ List<Middleware<GameState>> buildGameStateMiddleware({
     moduleController: moduleController,
   ).buildAll(),
 ];
+
+buildLoggingMiddleware([String preLabel = 'LoggingMiddleware']) {
+  return (Store<GameState> store, dynamic action, NextDispatcher next) async {
+    print('$preLabel ${action.runtimeType.toString()}');
+    next(action);
+  };
+}

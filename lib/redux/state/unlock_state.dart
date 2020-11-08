@@ -1,6 +1,7 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:space_station_tycoon/models/modules/module.dart';
+import 'package:space_station_tycoon/redux/state/states.dart';
 
 @immutable
 class UnlockState {
@@ -12,10 +13,16 @@ class UnlockState {
     @required this.submoduleUnlocks,
   });
 
-  factory UnlockState.createDefault() => UnlockState(
-      templateUnlocks: BuiltList<ModuleTemplate>(),
-      submoduleUnlocks: BuiltList<SubmoduleTemplate>(),
-    );
+  UnlockState copyWith({
+    BuiltList<ModuleTemplate> templateUnlocks,
+    BuiltList<SubmoduleTemplate> submoduleUnlocks,
+  }) => UnlockState(
+    templateUnlocks: templateUnlocks != null ? templateUnlocks : this.templateUnlocks,
+    submoduleUnlocks: submoduleUnlocks != null ? submoduleUnlocks : this.submoduleUnlocks,
+  );
 
-  
+  factory UnlockState.createDefault() => UnlockState(
+    templateUnlocks: BuiltList<ModuleTemplate>(),
+    submoduleUnlocks: BuiltList<SubmoduleTemplate>(),
+  );
 }

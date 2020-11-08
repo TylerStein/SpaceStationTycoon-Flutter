@@ -30,7 +30,7 @@ class VisitorCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(visitor.id.toString()),
+                Text(visitor.name.toString()),
                 Spacer(),
                 Text('${visitor.satisfactionPercent.toString()}%')
               ],

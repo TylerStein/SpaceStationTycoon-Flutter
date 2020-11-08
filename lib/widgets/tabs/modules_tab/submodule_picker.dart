@@ -75,6 +75,7 @@ class SubmodulePicker extends StatelessWidget {
         itemBuilder: (BuildContext context, int index) => _buildModuleSquare(
           context: context,
           template: viewModel.templateUnlocks[index],
+          viewModel: viewModel,
           onTap: (context, template) {
             viewModel.onBuyModule(template);
             onClose();

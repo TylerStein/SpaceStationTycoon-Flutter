@@ -30,16 +30,20 @@ class VisitorController {
     } else if (visitor.openNeeds.isNotEmpty) {
       VisitorNeed nextNeed = visitor.getNextNeed(store);
       if (nextNeed != null) {
-        
         bool occupiedModule = nextNeed.tryOccupyModule(store);
         if (occupiedModule) {
           visitor.activeNeed = nextNeed;
         }
+      } else {
+        visitor.updateSatisfaction(-1);
+        if (visitor.satisfactionPercent <= 0) {
+          store.dispatch(RemoveVisitorModuleBindingAction.forVisitor(visitor.id));
+          store.dispatch(RemoveVisitorAction(visitor));
+        }
       }
     } else {
       store.dispatch(RemoveVisitorModuleBindingAction.forVisitor(visitor.id));
+      store.dispatch(RemoveVisitorAction(visitor));
     }
   }
-
-
 }

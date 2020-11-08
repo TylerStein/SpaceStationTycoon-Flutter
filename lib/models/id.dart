@@ -6,8 +6,10 @@ class IDProvider {
   IDProvider({
     List<ID> initialPool,
     int poolChunkSizeOverride = 100,
+    int poolMaxSizeOverride = 100,
   }) :
     poolChunkSize = poolChunkSizeOverride,
+    poolMax = poolMaxSizeOverride,
     pool = initialPool ?? List<ID>();
 
   ID unique() {

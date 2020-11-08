@@ -25,6 +25,12 @@ class AddVisitorAction implements LoggableAction {
   AddVisitorAction(this.visitor);
 }
 
+class RemoveVisitorAction implements LoggableAction {
+  Visitor visitor;
+  LogEvent get logEvent => LogEvent.logDeparture(visitor);
+  RemoveVisitorAction(this.visitor);
+}
+
 class AddVisitorModuleBindingAction {
   ID visitorID;
   ID moduleID;

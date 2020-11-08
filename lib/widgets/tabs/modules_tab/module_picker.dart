@@ -80,6 +80,7 @@ class ModulePicker extends StatelessWidget {
           separatorBuilder: (BuildContext context, int index) => Container(width: 12,),
           itemBuilder: (BuildContext context, int index) => _buildModuleSquare(
             context: context,
+            viewModel: viewModel,
             template: viewModel.templateUnlocks[index],
             onTap: (context, template) {
               viewModel.onBuyModule(template);

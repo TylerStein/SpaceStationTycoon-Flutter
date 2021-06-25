@@ -1,7 +1,6 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:space_station_tycoon/models/modules/module.dart';
-import 'package:space_station_tycoon/redux/state/states.dart';
 
 @immutable
 class UnlockState {

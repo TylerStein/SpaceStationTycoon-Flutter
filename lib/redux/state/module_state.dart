@@ -1,4 +1,3 @@
-
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:space_station_tycoon/models/modules/module.dart';
@@ -10,7 +9,7 @@ class BuiltModulesState {
   final int maxExteriormodules;
   final ModuleStateTree moduleStateTree;
 
-  BuiltList<ModuleState> get interiorModules => moduleStateTree.interiorModules; 
+  BuiltList<ModuleState> get interiorModules => moduleStateTree.interiorModules;
   BuiltList<ModuleState> get exteriorModules => moduleStateTree.exteriorModules;
 
   BuiltModulesState({
@@ -23,24 +22,77 @@ class BuiltModulesState {
     int maxInteriorModules,
     int maxExteriormodules,
     ModuleStateTree moduleStateTree,
-  }) => BuiltModulesState(
-    maxInteriorModules: maxInteriorModules ?? this.maxInteriorModules,
-    maxExteriormodules: maxExteriormodules ?? this.maxExteriormodules,
-    moduleStateTree: moduleStateTree ?? this.moduleStateTree,
-  );
+  }) =>
+      BuiltModulesState(
+        maxInteriorModules: maxInteriorModules ?? this.maxInteriorModules,
+        maxExteriormodules: maxExteriormodules ?? this.maxExteriormodules,
+        moduleStateTree: moduleStateTree ?? this.moduleStateTree,
+      );
 
-  factory BuiltModulesState.createDefault() =>
-    BuiltModulesState(
-      maxInteriorModules: 0,
-      maxExteriormodules: 0,
-      moduleStateTree: ModuleStateTree(),
-    );
+  factory BuiltModulesState.createDefault() => BuiltModulesState(
+        maxInteriorModules: 0,
+        maxExteriormodules: 0,
+        moduleStateTree: ModuleStateTree(),
+      );
 
-  List<ModuleState<T>> getModulesOfType<T extends ModuleTemplate>({ bool Function(ModuleState<T> state) testState }) {
-    ModuleLocation location = ModuleFactory.getModuleTemplate<T>().moduleLocation;
+  bool hasModuleByType(Type type) {
+    ModuleLocation location =
+        ModuleFactory.getModuleTemplateByType(type).moduleLocation;
+    if (location == ModuleLocation.INTERIOR) {
+      for (ModuleState state in moduleStateTree.interiorModules) {
+        if (state.templateType == type) {
+          return true;
+        }
+      }
+    } else {
+      for (ModuleState state in moduleStateTree.exteriorModules) {
+        if (state.templateType == type) {
+            return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  bool hasModuleOfType<T extends ModuleTemplate>({
+    bool Function(ModuleState<T> state) testState,
+  }) {
+    ModuleLocation location =
+        ModuleFactory.getModuleTemplate<T>().moduleLocation;
+    if (location == ModuleLocation.INTERIOR) {
+      for (ModuleState state in moduleStateTree.interiorModules) {
+        if (state.templateType == T) {
+          if (testState != null) {
+            return testState(state);
+          } else {
+            return true;
+          }
+        }
+      }
+    } else {
+      for (ModuleState state in moduleStateTree.exteriorModules) {
+        if (state.templateType == T) {
+          if (testState != null) {
+            return testState(state);
+          } else {
+            return true;
+          }
+        }
+      }
+    }
+
+    return false;
+  }
+
+  List<ModuleState<T>> getModulesOfType<T extends ModuleTemplate>({
+    bool Function(ModuleState<T> state) testState,
+  }) {
+    ModuleLocation location =
+        ModuleFactory.getModuleTemplate<T>().moduleLocation;
     if (location == ModuleLocation.INTERIOR) {
       return moduleStateTree.interiorModules.where((ModuleState state) {
-        if (state.templateType == T) { 
+        if (state.templateType == T) {
           if (testState != null) {
             return testState(state);
           } else {
@@ -53,7 +105,7 @@ class BuiltModulesState {
       }).toList();
     } else {
       return moduleStateTree.exteriorModules.where((ModuleState state) {
-        if (state.templateType == T) { 
+        if (state.templateType == T) {
           if (testState != null) {
             return testState(state);
           } else {
@@ -76,16 +128,16 @@ class ModuleStateTree {
     interiorModules = new BuiltList<ModuleState>();
     exteriorModules = new BuiltList<ModuleState>();
   }
-  
+
   @override
   int get hashCode => interiorModules.hashCode ^ exteriorModules.hashCode;
 
   @override
   operator ==(Object other) =>
-    identical(this, other) ||
-    other is ModuleStateTree &&
-    other.interiorModules == interiorModules &&
-    other.exteriorModules == exteriorModules;
+      identical(this, other) ||
+      other is ModuleStateTree &&
+          other.interiorModules == interiorModules &&
+          other.exteriorModules == exteriorModules;
 
   void addModuleState(ModuleState moduleState) {
     if (moduleState.template.moduleLocation == ModuleLocation.INTERIOR) {

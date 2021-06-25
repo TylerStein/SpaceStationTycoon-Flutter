@@ -7,6 +7,7 @@ import 'package:redux/redux.dart';
 import 'package:space_station_tycoon/models/modules/module.dart';
 import 'package:space_station_tycoon/redux/actions/state_actions.dart';
 import 'package:space_station_tycoon/redux/state/state.dart';
+import 'package:space_station_tycoon/widgets/generic/module_detail.dart';
 
 @immutable
 class SubModulePickerViewModel {
@@ -66,20 +67,22 @@ class SubmodulePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StoreConnector(
-      converter: (Store<GameState> store) => SubModulePickerViewModel.fromStore(store, parentModuleState),
-      builder: (BuildContext context, SubModulePickerViewModel viewModel) => ListView.separated(
-        itemCount: viewModel.templateUnlocks.length,
-        scrollDirection: Axis.horizontal,
-        separatorBuilder: (BuildContext context, int index) => Container(width: 12),
-        itemBuilder: (BuildContext context, int index) => _buildModuleSquare(
-          context: context,
-          template: viewModel.templateUnlocks[index],
-          viewModel: viewModel,
-          onTap: (context, template) {
-            viewModel.onBuyModule(template);
-            onClose();
-          },
+    return ModuleDetail(
+      child: StoreConnector<GameState, SubModulePickerViewModel>(
+        converter: (Store<GameState> store) => SubModulePickerViewModel.fromStore(store, parentModuleState),
+        builder: (BuildContext context, SubModulePickerViewModel viewModel) => ListView.separated(
+          itemCount: viewModel.templateUnlocks.length,
+          scrollDirection: Axis.horizontal,
+          separatorBuilder: (BuildContext context, int index) => Container(width: 12,),
+          itemBuilder: (BuildContext context, int index) => _buildModuleSquare(
+            context: context,
+            viewModel: viewModel,
+            template: viewModel.templateUnlocks[index],
+            onTap: (context, template) {
+              viewModel.onBuyModule(template);
+              onClose();
+            },
+          ),
         ),
       ),
     );
@@ -94,7 +97,7 @@ class SubmodulePicker extends StatelessWidget {
     bool canAfford = viewModel.credits > template.baseCreditCost;
     return Container(
       margin: const EdgeInsets.all(8),
-      child: RaisedButton(
+      child: ElevatedButton(
         onPressed: canAfford ?
           () => onTap(context, template)
           : null,

@@ -29,7 +29,7 @@ class StorageModuleState extends ModuleState<StorageModuleTemplate> {
   List<SubmoduleState> _submodules;
 
   StorageModuleState(StorageModuleTemplate template) : super(template) {
-    _submodules = new List<SubmoduleState>();
+    _submodules = List<SubmoduleState>.empty(growable: true);
   }
 
   @override

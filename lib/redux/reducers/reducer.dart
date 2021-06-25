@@ -13,7 +13,7 @@ GameState gameStateReducer(GameState state, dynamic action) {
     questState: (action is SetQuestStateAction) ? action.state : state.questState,
     resourceState: (action is SetResourceStateAction) ? action.state : state.resourceState,
     timeState: (action is SetTimeStateAction) ? action.state : state.timeState,
-    unlockState: (action is SetUnlockStateActions) ? action.state : state.unlockState,
+    unlockState: (action is SetUnlockStateAction) ? action.state : state.unlockState,
     moduleVisitorBindingState: moduleVisitorBindingStateReducer(state.moduleVisitorBindingState, action),
   );
 }

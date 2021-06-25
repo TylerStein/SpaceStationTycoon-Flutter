@@ -10,9 +10,9 @@ class SetVisitorStateAction {
   SetVisitorStateAction(this.state);
 }
 
-class SetUnlockStateActions {
+class SetUnlockStateAction {
   final UnlockState state;
-  SetUnlockStateActions(this.state);
+  SetUnlockStateAction(this.state);
 }
 
 class SetTimeStateAction {

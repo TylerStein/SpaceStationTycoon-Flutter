@@ -10,7 +10,7 @@ class IDProvider {
   }) :
     poolChunkSize = poolChunkSizeOverride,
     poolMax = poolMaxSizeOverride,
-    pool = initialPool ?? List<ID>();
+    pool = initialPool ?? List<ID>.empty(growable: true);
 
   ID unique() {
     if (pool.isEmpty) {

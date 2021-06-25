@@ -24,36 +24,39 @@ class ModulesTabViewModel {
   });
 
   @override
-  int get hashCode => interiorModules.hashCode ^
-    exteriorModules.hashCode ^
-    maxInteriorModules.hashCode ^
-    maxExteriorModules.hashCode;
+  int get hashCode =>
+      interiorModules.hashCode ^
+      exteriorModules.hashCode ^
+      maxInteriorModules.hashCode ^
+      maxExteriorModules.hashCode;
 
   @override
   operator ==(Object other) =>
-    identical(this, other) ||
-    other is ModulesTabViewModel &&
-    other.interiorModules == interiorModules &&
-    other.exteriorModules == exteriorModules &&
-    other.maxInteriorModules == maxInteriorModules &&
-    other.maxExteriorModules == maxExteriorModules;
+      identical(this, other) ||
+      other is ModulesTabViewModel &&
+          other.interiorModules == interiorModules &&
+          other.exteriorModules == exteriorModules &&
+          other.maxInteriorModules == maxInteriorModules &&
+          other.maxExteriorModules == maxExteriorModules;
 
   factory ModulesTabViewModel.fromStore(Store<GameState> store) =>
-    ModulesTabViewModel(
-      interiorModules: store.state.moduleState.moduleStateTree.interiorModules,
-      exteriorModules: store.state.moduleState.moduleStateTree.exteriorModules,
-      maxInteriorModules: store.state.moduleState.maxInteriorModules,
-      maxExteriorModules: store.state.moduleState.maxExteriormodules,
-    );
+      ModulesTabViewModel(
+        interiorModules:
+            store.state.moduleState.moduleStateTree.interiorModules,
+        exteriorModules:
+            store.state.moduleState.moduleStateTree.exteriorModules,
+        maxInteriorModules: store.state.moduleState.maxInteriorModules,
+        maxExteriorModules: store.state.moduleState.maxExteriormodules,
+      );
 }
 
 class ModulesTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StoreConnector<GameState, ModulesTabViewModel>(
-      converter: (Store<GameState> store) => ModulesTabViewModel.fromStore(store),
-      builder: (BuildContext context, ModulesTabViewModel viewModel) =>
-       Column(
+      converter: (Store<GameState> store) =>
+          ModulesTabViewModel.fromStore(store),
+      builder: (BuildContext context, ModulesTabViewModel viewModel) => Column(
         children: [
           _buildAddRow(
             context,
@@ -64,32 +67,27 @@ class ModulesTab extends StatelessWidget {
               PersistentBottomSheetController controller;
               controller = Scaffold.of(context).showBottomSheet(
                 (context) => ModulePicker(
-                  locationFilter: ModuleLocation.INTERIOR,
-                  onClose: () {
-                    controller.close();
-                  }
-                ),
+                    locationFilter: ModuleLocation.INTERIOR,
+                    onClose: () {
+                      controller.close();
+                    }),
               );
             },
           ),
           _buildModuleGrid<ModuleState>(
             context,
             viewModel.interiorModules,
-            (context, module) => _buildModuleSquare(
-              context,
-              module,
-              (BuildContext context, ModuleState module) {
-                PersistentBottomSheetController controller;
-                controller = Scaffold.of(context).showBottomSheet(
-                  (context) => SubmodulePicker(
+            (context, module) => _buildModuleSquare(context, module,
+                (BuildContext context, ModuleState module) {
+              PersistentBottomSheetController controller;
+              controller = Scaffold.of(context).showBottomSheet(
+                (context) => SubmodulePicker(
                     parentModuleState: module,
                     onClose: () {
                       controller.close();
-                    }
-                  ),
-                );
-              }
-            ),
+                    }),
+              );
+            }),
           ),
           _buildAddRow(
             context,
@@ -100,57 +98,56 @@ class ModulesTab extends StatelessWidget {
               PersistentBottomSheetController controller;
               controller = Scaffold.of(context).showBottomSheet(
                 (context) => ModulePicker(
-                  locationFilter: ModuleLocation.EXTERIOR,
-                  onClose: () {
-                    controller.close();
-                  }
-                ),
+                    locationFilter: ModuleLocation.EXTERIOR,
+                    onClose: () {
+                      controller.close();
+                    }),
               );
             },
           ),
           _buildModuleGrid<ModuleState>(
             context,
             viewModel.exteriorModules,
-            (context, module) => _buildModuleSquare(
-              context,
-              module,
-              (BuildContext context, ModuleState module) {
-                PersistentBottomSheetController controller;
-                controller = Scaffold.of(context).showBottomSheet(
-                  (context) => SubmodulePicker(
+            (context, module) => _buildModuleSquare(context, module,
+                (BuildContext context, ModuleState module) {
+              PersistentBottomSheetController controller;
+              controller = Scaffold.of(context).showBottomSheet(
+                (context) => SubmodulePicker(
                     parentModuleState: module,
                     onClose: () {
                       controller.close();
-                    }
-                  ),
-                );
-              }
-            ),
+                    }),
+              );
+            }),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildAddRow(BuildContext context, String text, int moduleCount, int maxModules, Function() onAdd) {
+  Widget _buildAddRow(BuildContext context, String text, int moduleCount,
+      int maxModules, Function() onAdd) {
     return Padding(
-      padding: const EdgeInsets.only(top: 12, left: 12),
-      child: Row(
-        children: [
-          Text(text, style: Theme.of(context).textTheme.headline6,),
-          Padding(
-            padding: const EdgeInsets.only(left: 12),
-            child: IconButton(
-              icon: Icon(Icons.add_circle_outline),
-              onPressed: onAdd,
+        padding: const EdgeInsets.only(top: 12, left: 12),
+        child: Row(
+          children: [
+            Text(
+              text,
+              style: Theme.of(context).textTheme.headline6,
             ),
-          )
-        ],
-      )
-    );
+            Padding(
+              padding: const EdgeInsets.only(left: 12),
+              child: IconButton(
+                icon: Icon(Icons.add_circle_outline),
+                onPressed: onAdd,
+              ),
+            )
+          ],
+        ));
   }
 
-  Widget _buildModuleGrid<T>(BuildContext context, BuiltList<T> modules, Widget Function(BuildContext context, T module) builder) {
+  Widget _buildModuleGrid<T>(BuildContext context, BuiltList<T> modules,
+      Widget Function(BuildContext context, T module) builder) {
     return Expanded(
       child: GridView.count(
         crossAxisCount: 4,
@@ -159,15 +156,28 @@ class ModulesTab extends StatelessWidget {
     );
   }
 
-  Widget _buildModuleSquare(BuildContext context, ModuleState module, Function(BuildContext context, ModuleState module) onTap) {
+  Widget _buildModuleSquare(BuildContext context, ModuleState module,
+      Function(BuildContext context, ModuleState module) onTap) {
+    // var submodules = module.getSubmodules();
+    var submoduleNames = List.filled(module.submoduleCount, '!');
+    // for (int i = 0; i < submodules.length; i++) {
+    //   submoduleNames[i] = submodules[i].submoduleType.toString()[0];
+    // }
     return Container(
       margin: const EdgeInsets.all(8),
       child: Material(
         type: MaterialType.card,
         child: InkWell(
           onTap: () => onTap(context, module),
-          child: Center(
-            child: Text('${module.template.shortName}'),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('${module.template.shortName}'),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: submoduleNames.map((s) => Text(s)).toList(),
+              )
+            ],
           ),
         ),
       ),

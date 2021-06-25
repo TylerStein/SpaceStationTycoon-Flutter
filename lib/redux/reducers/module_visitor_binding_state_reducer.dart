@@ -17,7 +17,7 @@ ModuleVisitorBindingState _removeVisitorModuleBindingAction(ModuleVisitorBinding
   } else if (action.moduleID != null) {
     return state.withRemovedModule(action.moduleID);
   } else if (action.visitorID != null) {
-    return state.withRemovedVisitor(action.moduleID);
+    return state.withRemovedVisitor(action.visitorID);
   } else {
     return state;
   }

@@ -44,7 +44,7 @@ class StoreModuleState extends ModuleState<StoreModuleTemplate> {
   // bool get hasVisitors => _visitors.isNotEmpty;
 
   StoreModuleState(StoreModuleTemplate template): super(template) {
-    _submodules = new List<SubmoduleState<SubmoduleTemplate<StoreModuleTemplate>, StoreModuleTemplate>>();
+    _submodules = List<SubmoduleState<SubmoduleTemplate<StoreModuleTemplate>, StoreModuleTemplate>>.empty(growable: true);
     // _visitors = new Map<ID, Visitor>();
   }
 

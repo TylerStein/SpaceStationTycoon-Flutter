@@ -24,8 +24,8 @@ class Visitor {
     this.activeNeed,
     this.satisfactionPercent,
   }) {
-    if (openNeeds == null) openNeeds = List<VisitorNeed>();
-    if (closedNeeds == null) closedNeeds = List<VisitorNeed>();
+    if (openNeeds == null) openNeeds = List<VisitorNeed>.empty(growable: true);
+    if (closedNeeds == null) closedNeeds = List<VisitorNeed>.empty(growable: true);
     if (satisfactionPercent == null) satisfactionPercent = 100;
   }
 

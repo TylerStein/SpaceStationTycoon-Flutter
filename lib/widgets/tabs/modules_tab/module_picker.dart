@@ -101,7 +101,7 @@ class ModulePicker extends StatelessWidget {
     bool canAfford = viewModel.credits > template.baseCreditCost;
     return Container(
       margin: const EdgeInsets.all(8),
-      child: RaisedButton(
+      child: ElevatedButton(
         onPressed: canAfford ?
           () => onTap(context, template)
           : null,

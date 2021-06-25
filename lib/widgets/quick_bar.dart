@@ -68,7 +68,7 @@ class QuickBar extends StatelessWidget {
             Text(viewModel.credits.toString()),
             Spacer(),
             // Fuel
-            Icon(Icons.star, size: 12),
+            Icon(Icons.local_gas_station, size: 12),
             Text(viewModel.fuel.toString()),
             Spacer(),
             // Parts

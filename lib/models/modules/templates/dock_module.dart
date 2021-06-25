@@ -32,7 +32,7 @@ class DockModuleState extends ModuleState<DockModuleTemplate> {
   // bool get isOccupied => visitorID != null;
 
   DockModuleState(DockModuleTemplate template): super(template) {
-    _submodules = new List<SubmoduleState<SubmoduleTemplate<DockModuleTemplate>, DockModuleTemplate>>();
+    _submodules = List<SubmoduleState<SubmoduleTemplate<DockModuleTemplate>, DockModuleTemplate>>.empty(growable: true);
   }
 
   @override

@@ -42,6 +42,11 @@ class ModuleFactory {
     return _submoduleTemplates[template.runtimeType].createDefaultState();
   }
 
+  static ModuleTemplate getModuleTemplateByType(Type type) {
+    assert(_moduleTemplates.containsKey(type), 'Module of Type $type is missing from ModuleTemplates!');
+    return _moduleTemplates[type];
+
+  }
 
   static T getModuleTemplate<T extends ModuleTemplate>() {
     assert(_moduleTemplates.containsKey(T), 'Module of Type $T is missing from ModuleTemplates!');

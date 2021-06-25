@@ -44,9 +44,9 @@ class EconomyTabViewModel {
   factory EconomyTabViewModel.fromStore(Store<GameState> store) =>
     EconomyTabViewModel(
       credits: store.state.resourceState.credits.value,
-      creditsDifference: store.state.resourceState.credits.last - store.state.resourceState.credits.value,
+      creditsDifference: store.state.resourceState.credits.value - store.state.resourceState.credits.last,
       fuel: store.state.resourceState.fuel.value,
-      fuelDifference: store.state.resourceState.fuel.last - store.state.resourceState.fuel.value,
+      fuelDifference: store.state.resourceState.fuel.value - store.state.resourceState.fuel.last,
       addCredits: (int credits) {
         store.dispatch(SetResourceStateAction(store.state.resourceState.withAddCredits(credits)));
       },
